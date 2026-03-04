@@ -4,6 +4,10 @@ name: Cappuccino
 category: hot_beverage
 available: true
 
+# TDD cascade cross-references
+satisfies_signal: [L1_eco_01, L1_exp_01]
+satisfies_experience: [L0_eco_01, L0_exp_01]
+
 description: >
   Classic Italian-style cappuccino. Equal thirds espresso, steamed milk,
   and dense microfoam in a 180ml (6oz) ceramic cup. Whole milk standard.

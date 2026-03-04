@@ -1,5 +1,9 @@
 version: 1.0.0
 
+# TDD cascade cross-references
+satisfies_signal: [L1_tem_02, L1_ide_02, L1_exp_01]
+satisfies_experience: [L0_tem_03, L0_ide_02, L0_exp_01]
+
 description: >
   Quality control processes for Spectra Coffee. Defines grinder calibration
   (the daily "dial-in"), shot quality standards, drink verification, and

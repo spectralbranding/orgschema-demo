@@ -1,5 +1,9 @@
 version: 1.0.0
 
+# TDD cascade cross-references
+satisfies_signal: [L1_exp_02, L1_exp_03]
+satisfies_experience: [L0_exp_02, L0_exp_04]
+
 description: >
   Opening and closing procedures for Spectra Coffee flagship location. Defines
   the complete daily startup and shutdown sequence — equipment warmup, grinder

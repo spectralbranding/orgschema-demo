@@ -1,0 +1,124 @@
+%%{init: {'theme': 'neutral', 'themeVariables': {'fontSize': '14px'}}}%%
+graph TD
+    subgraph L0["L0: Customer Experience Contract<br/><i>Acceptance Tests</i>"]
+        L0_sem["Semiotic<br/>3 tests"]
+        L0_nar["Narrative<br/>3 tests"]
+        L0_tem["Temporal<br/>3 tests"]
+        L0_ide["Ideological<br/>3 tests"]
+        L0_eco["Economic<br/>3 tests"]
+        L0_exp["Experiential<br/>4 tests"]
+        L0_cul["Cultural<br/>3 tests"]
+        L0_soc["Social<br/>4 tests"]
+    end
+
+    subgraph L1["L1: Signal Requirements<br/><i>Integration Tests</i>"]
+        L1_sem["Semiotic signals<br/>sig_01, sig_02"]
+        L1_nar["Narrative signals<br/>sig_03, sig_04"]
+        L1_tem["Temporal signals<br/>sig_05, sig_06"]
+        L1_ide["Ideological signals<br/>sig_07, sig_08, sig_17"]
+        L1_eco["Economic signals<br/>sig_09, sig_10, sig_19"]
+        L1_exp["Experiential signals<br/>sig_11, sig_12"]
+        L1_cul["Cultural signals<br/>sig_13, sig_14, sig_18"]
+        L1_soc["Social signals<br/>sig_15, sig_16"]
+    end
+
+    subgraph L2["L2: Process Contracts<br/><i>Unit Tests</i>"]
+        QC["quality_control.yaml<br/>Calibration, shot standards"]
+        OC["opening_closing.yaml<br/>Startup, shutdown"]
+        EM["equipment_maintenance.yaml<br/>Daily, weekly, monthly"]
+        IC["internal_communications.yaml<br/>Tone, andon, kaizen"]
+        FS["food_safety.yaml<br/>HACCP, 5 CCPs"]
+        AM["allergen_management.yaml<br/>14 EU allergens"]
+    end
+
+    subgraph L3["L3: Product/Procedure Specs<br/><i>Implementation</i>"]
+        ESP["espresso.yaml"]
+        CAP["cappuccino.yaml"]
+        OAT["oat_latte.yaml"]
+        FIL["filter_coffee.yaml"]
+        AME["americano.yaml"]
+        CRO["croissant.yaml"]
+        BRA["brand/identity.yaml"]
+    end
+
+    subgraph L4["L4: Input Specifications<br/><i>Dependencies</i>"]
+        BEAN["Ethiopia Yirgacheffe<br/>Nordic Roasters GmbH"]
+        MILK["Whole Milk 3.5%<br/>Milchwerke Berlin"]
+        OATM["Oatly Barista Edition<br/>Oatly AB"]
+        CROI["Par-Baked Croissant<br/>Boulangerie Schmidt"]
+        EQUIP["Equipment<br/>Espresso machine, grinder, oven"]
+    end
+
+    subgraph L5["L5: Sourcing Requirements<br/><i>Infrastructure</i>"]
+        SUPP["Supplier contracts<br/>Direct trade, certified"]
+        WATER["Water filtration<br/>TDS 100-150 ppm"]
+        TRAIN["Staff training<br/>Allergen, HACCP, taste"]
+    end
+
+    %% L0 -> L1 links
+    L0_sem --> L1_sem
+    L0_nar --> L1_nar
+    L0_tem --> L1_tem
+    L0_ide --> L1_ide
+    L0_eco --> L1_eco
+    L0_exp --> L1_exp
+    L0_cul --> L1_cul
+    L0_soc --> L1_soc
+
+    %% L1 -> L2 links (selected key paths)
+    L1_exp --> QC
+    L1_tem --> QC
+    L1_ide --> IC
+    L1_soc --> IC
+    L1_soc --> AM
+    L1_exp --> OC
+    L1_exp --> EM
+    L1_ide --> FS
+
+    %% L2 -> L3 links
+    QC --> ESP
+    QC --> CAP
+    QC --> OAT
+    FS --> ESP
+    FS --> CRO
+    AM --> OAT
+    AM --> CRO
+
+    %% L1 -> L3 direct (products implement signals directly)
+    L1_nar --> ESP
+    L1_eco --> OAT
+    L1_sem --> BRA
+    L1_cul --> BRA
+
+    %% L3 -> L4 links
+    ESP --> BEAN
+    ESP --> EQUIP
+    CAP --> MILK
+    OAT --> OATM
+    FIL --> BEAN
+    CRO --> CROI
+
+    %% L4 -> L5 links
+    BEAN --> SUPP
+    MILK --> SUPP
+    OATM --> SUPP
+    CROI --> SUPP
+    EQUIP --> SUPP
+    BEAN --> WATER
+    AM --> TRAIN
+    QC --> TRAIN
+
+    %% Styling
+    classDef l0 fill:#e8f5e9,stroke:#2e7d32
+    classDef l1 fill:#e3f2fd,stroke:#1565c0
+    classDef l2 fill:#fff3e0,stroke:#e65100
+    classDef l3 fill:#fce4ec,stroke:#c62828
+    classDef l4 fill:#f3e5f5,stroke:#6a1b9a
+    classDef l5 fill:#eceff1,stroke:#37474f
+
+    class L0_sem,L0_nar,L0_tem,L0_ide,L0_eco,L0_exp,L0_cul,L0_soc l0
+    class L1_sem,L1_nar,L1_tem,L1_ide,L1_eco,L1_exp,L1_cul,L1_soc l1
+    class QC,OC,EM,IC,FS,AM l2
+    class ESP,CAP,OAT,FIL,AME,CRO,BRA l3
+    class BEAN,MILK,OATM,CROI,EQUIP l4
+    class SUPP,WATER,TRAIN l5

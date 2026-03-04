@@ -8,6 +8,19 @@ values:
 version: 1.0.0
 founded: 2024
 
+execution_profile:
+  type: human_artisan
+  description: >
+    All customer-facing processes executed by human staff (L2 execution).
+    Machines assist (espresso machine, grinder, oven) but humans render
+    the spec through individual priors (training, skill, judgment).
+  executor_invariant_pct: 75  # ~75% of demo specs are executor-invariant
+  human_premium:
+    - latte_art
+    - customer_rapport
+    - taste_judgment
+    - crisis_improvisation
+
 locations:
   - id: flagship
     address: "42 Roast Lane, Berlin, DE"

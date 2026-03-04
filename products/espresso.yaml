@@ -4,6 +4,10 @@ name: Espresso
 category: hot_beverage
 available: true
 
+# TDD cascade cross-references
+satisfies_signal: [L1_nar_01, L1_tem_02, L1_ide_02, L1_eco_01, L1_exp_01, L1_exp_03]
+satisfies_experience: [L0_nar_01, L0_nar_02, L0_tem_03, L0_ide_02, L0_exp_01, L0_exp_04]
+
 description: >
   Single-origin Ethiopia Yirgacheffe, medium roast. Bright citrus acidity
   with floral notes and a clean, sweet finish. Standard double-basket dose

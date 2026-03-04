@@ -101,17 +101,17 @@ mappings:
     dimension: economic
     emission_type: designed
     signal: >
-      Itemized COGS breakdown (espresso $0.42 + oat milk $0.96 +
-      vanilla $0.08 + cup $0.15 = $1.61) against $5.50 price reveals
-      70.7% margin. In a transparency-first brand, this data could be
-      customer-facing.
+      Itemized COGS breakdown (espresso EUR 0.39 + oat milk EUR 0.88 +
+      vanilla EUR 0.07 + cup EUR 0.14 = EUR 1.48) against EUR 5.00 price
+      reveals 70.4% margin. In a transparency-first brand, this data
+      could be customer-facing.
 
   - id: sig_10
     source: products/oat_latte.yaml:modifiers.regular_milk.price_adjustment
     dimension: economic
     emission_type: designed
     signal: >
-      Plant milk is default; dairy is the -$0.50 modifier. This inverts
+      Plant milk is default; dairy is the -EUR 0.46 modifier. This inverts
       the industry convention where plant milk costs extra. The pricing
       structure itself is an economic signal about which option is
       "normal" vs. "alternative."

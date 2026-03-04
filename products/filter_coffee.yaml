@@ -4,6 +4,10 @@ name: Filter Coffee
 category: hot_beverage
 available: true
 
+# TDD cascade cross-references
+satisfies_signal: [L1_nar_01, L1_eco_01, L1_exp_01]
+satisfies_experience: [L0_nar_01, L0_eco_01, L0_exp_01]
+
 description: >
   Batch brew filter coffee using the same Ethiopia Yirgacheffe single-origin
   as our espresso. Medium-coarse grind, SCA standard 1:16.7 ratio. Brewed

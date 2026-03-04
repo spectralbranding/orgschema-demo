@@ -4,6 +4,10 @@ name: Oat Latte
 category: hot_beverage
 available: true
 
+# TDD cascade cross-references
+satisfies_signal: [L1_eco_01, L1_eco_02, L1_exp_01, L1_soc_02]
+satisfies_experience: [L0_eco_01, L0_eco_02, L0_exp_01, L0_soc_03]
+
 description: >
   House espresso with Oatly Barista Edition oat milk, steamed to
   silky microfoam. Finished with optional Monin vanilla syrup.

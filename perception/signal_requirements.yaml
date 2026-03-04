@@ -1,0 +1,250 @@
+version: 1.0.0
+
+description: >
+  Level 1 of the Reverse-Design TDD cascade: Signal Requirements.
+  These are the INTEGRATION TESTS — they define what signals must be
+  emitted to satisfy the L0 Customer Experience Contract. Each signal
+  requirement links upward to an L0 acceptance test and downward to
+  the L2 process contracts and product specs that implement it.
+
+  This file bridges perception (L0) and operations (L2-L5).
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+signal_map_reference: signals/signal-map.yaml
+
+signal_requirements:
+
+  # --- Semiotic Signals ---
+
+  - id: L1_sem_01
+    dimension: semiotic
+    satisfies_experience: [L0_sem_01, L0_sem_02]
+    requirement: >
+      Visual identity communicates craft laboratory aesthetic through
+      espresso brown palette, spectral prism mark, and material-honest
+      color system.
+    implemented_by:
+      - brand/identity.yaml  # visual colors, logo, typography
+    signal_map_refs: [sig_01, sig_02]
+    verification: brand_audit_quarterly
+
+  - id: L1_sem_02
+    dimension: semiotic
+    satisfies_experience: [L0_sem_03]
+    requirement: >
+      Packaging design signals intention and care through branded cups,
+      bags, and napkins with consistent visual identity application.
+    implemented_by:
+      - brand/identity.yaml  # packaging section
+    signal_map_refs: [sig_01]
+    verification: packaging_consistency_check
+
+  # --- Narrative Signals ---
+
+  - id: L1_nar_01
+    dimension: narrative
+    satisfies_experience: [L0_nar_01, L0_nar_02]
+    requirement: >
+      Coffee origin story is encoded in product specs and visible to
+      customers through menu, packaging, and display materials.
+      Supply chain relationship is traceable from cup to farm.
+    implemented_by:
+      - products/espresso.yaml  # origin, altitude, processing, supplier
+      - products/filter_coffee.yaml  # same origin chain
+    signal_map_refs: [sig_03, sig_04]
+    verification: menu_displays_origin_info
+
+  - id: L1_nar_02
+    dimension: narrative
+    satisfies_experience: [L0_nar_03]
+    requirement: >
+      Brand story is discoverable through environment without being
+      imposed. Story elements present for curious customers.
+    implemented_by:
+      - brand/identity.yaml  # environment signage
+    signal_map_refs: [sig_14]
+    verification: mystery_shopper_discovers_story
+
+  # --- Temporal Signals ---
+
+  - id: L1_tem_01
+    dimension: temporal
+    satisfies_experience: [L0_tem_01]
+    requirement: >
+      Space exhibits perceptible temporal rhythm through music schedule,
+      lighting changes, and energy level shifts across day parts.
+    implemented_by:
+      - brand/identity.yaml  # music schedule, lighting schedule
+    signal_map_refs: [sig_05, sig_06]
+    verification: time_of_day_perception_differs
+
+  - id: L1_tem_02
+    dimension: temporal
+    satisfies_experience: [L0_tem_02, L0_tem_03]
+    requirement: >
+      Product consistency over time builds trust and enables ritual
+      formation. Same drink tastes the same every visit.
+    implemented_by:
+      - processes/quality_control.yaml  # daily calibration, shot standards
+      - products/espresso.yaml  # precise extraction parameters
+    signal_map_refs: [sig_12]
+    verification: repeat_customer_consistency_rating
+
+  # --- Ideological Signals ---
+
+  - id: L1_ide_01
+    dimension: ideological
+    satisfies_experience: [L0_ide_01]
+    requirement: >
+      Values are enacted through visible operational choices, not
+      advertised through messaging. Sustainability visible in sourcing,
+      waste policy, and packaging.
+    implemented_by:
+      - organization.yaml  # values declaration
+      - products/croissant.yaml  # discard policy (quality > waste economics)
+      - compliance/food_safety.yaml  # documented waste management
+    signal_map_refs: [sig_07, sig_08]
+    verification: no_sustainability_slogans_visible
+
+  - id: L1_ide_02
+    dimension: ideological
+    satisfies_experience: [L0_ide_02, L0_ide_03]
+    requirement: >
+      Quality commitment observable through precise, repeatable
+      extraction parameters. Transparency is operational — ingredient
+      sourcing and pricing structure available on request.
+    implemented_by:
+      - processes/quality_control.yaml  # calibration, shot standards
+      - products/espresso.yaml  # extraction parameters
+    signal_map_refs: [sig_12, sig_17]
+    verification: parameter_precision_audit
+
+  # --- Economic Signals ---
+
+  - id: L1_eco_01
+    dimension: economic
+    satisfies_experience: [L0_eco_01, L0_eco_03]
+    requirement: >
+      Pricing communicates fair value — premium justified by visible
+      quality, not brand markup. No hidden costs or upselling pressure.
+    implemented_by:
+      - products/espresso.yaml  # pricing section
+      - products/cappuccino.yaml
+      - products/oat_latte.yaml
+      - products/filter_coffee.yaml
+      - products/americano.yaml
+      - products/croissant.yaml
+    signal_map_refs: [sig_09]
+    verification: customer_value_perception_survey
+
+  - id: L1_eco_02
+    dimension: economic
+    satisfies_experience: [L0_eco_02]
+    requirement: >
+      Pricing structure signals values: plant milk is default, dairy
+      is the modifier. This inverts industry convention.
+    implemented_by:
+      - products/oat_latte.yaml  # regular_milk modifier is negative price
+    signal_map_refs: [sig_10]
+    verification: menu_shows_plant_default
+
+  # --- Experiential Signals ---
+
+  - id: L1_exp_01
+    dimension: experiential
+    satisfies_experience: [L0_exp_01]
+    requirement: >
+      Espresso is balanced, sweet, clean — no bitterness. Achieved
+      through precise extraction parameters and daily calibration.
+    implemented_by:
+      - products/espresso.yaml  # extraction parameters
+      - processes/quality_control.yaml  # daily calibration, shot quality
+    signal_map_refs: [sig_12]
+    verification: taste_quality_4_plus_rating
+
+  - id: L1_exp_02
+    dimension: experiential
+    satisfies_experience: [L0_exp_02, L0_exp_03]
+    requirement: >
+      Environment is comfortable (temperature, noise, cleanliness)
+      and aroma of fresh coffee dominates the space.
+    implemented_by:
+      - brand/identity.yaml  # environment temperature, noise
+      - processes/opening_closing.yaml  # cleanliness procedures
+    signal_map_refs: [sig_11]
+    verification: dwell_time_and_comfort_metrics
+
+  - id: L1_exp_03
+    dimension: experiential
+    satisfies_experience: [L0_exp_04]
+    requirement: >
+      Service delivery is efficient (espresso within 60-180s) without
+      feeling rushed.
+    implemented_by:
+      - processes/opening_closing.yaml  # staffing, prep
+      - products/espresso.yaml  # preparation steps
+    signal_map_refs: []
+    verification: delivery_time_tracking
+
+  # --- Cultural Signals ---
+
+  - id: L1_cul_01
+    dimension: cultural
+    satisfies_experience: [L0_cul_01]
+    requirement: >
+      Space reads as Berlin specialty coffee — design language, music,
+      and environment match third-wave codes.
+    implemented_by:
+      - brand/identity.yaml  # environment, music, design
+      - organization.yaml  # Berlin location
+    signal_map_refs: [sig_13, sig_14]
+    verification: first_visit_perception_survey
+
+  - id: L1_cul_02
+    dimension: cultural
+    satisfies_experience: [L0_cul_02, L0_cul_03]
+    requirement: >
+      Atmosphere is welcoming to newcomers. Handwritten/human elements
+      prevent sterile-clinical feeling. Menu is accessible.
+    implemented_by:
+      - brand/identity.yaml  # signage, a-frame, chalkboard
+    signal_map_refs: [sig_14, sig_18]
+    verification: newcomer_comfort_rating
+
+  # --- Social Signals ---
+
+  - id: L1_soc_01
+    dimension: social
+    satisfies_experience: [L0_soc_01, L0_soc_02]
+    requirement: >
+      Staff greet within 10 seconds. Service tone is warm, competent,
+      unhurried. Internal communication norms produce externally visible
+      competence and psychological safety.
+    implemented_by:
+      - processes/internal_communications.yaml  # tone principles
+      - processes/opening_closing.yaml  # staffing levels
+    signal_map_refs: [sig_17, sig_18]
+    verification: greeting_time_mystery_shop
+
+  - id: L1_soc_02
+    dimension: social
+    satisfies_experience: [L0_soc_03]
+    requirement: >
+      Dietary needs proactively addressed. Allergen information offered
+      before requested. Plant-based is default menu position.
+    implemented_by:
+      - compliance/allergen_management.yaml  # customer communication protocol
+      - products/oat_latte.yaml  # plant-based default
+    signal_map_refs: [sig_15]
+    verification: allergen_communication_audit
+
+  - id: L1_soc_03
+    dimension: social
+    satisfies_experience: [L0_soc_04]
+    requirement: >
+      Regular customers feel recognized as individuals. Staff remember
+      orders or names for daily visitors.
+    implemented_by:
+      - processes/internal_communications.yaml  # gemba, relationship building
+    signal_map_refs: [sig_16]
+    verification: regular_recognition_survey

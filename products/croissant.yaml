@@ -5,6 +5,10 @@ category: bakery
 available: true
 made_in_house: false
 
+# TDD cascade cross-references
+satisfies_signal: [L1_ide_01, L1_eco_01]
+satisfies_experience: [L0_ide_01, L0_eco_01]
+
 description: >
   Classic French-style butter croissant, supplier-sourced from an
   artisan bakery. Laminated dough with European-style butter. Delivered
