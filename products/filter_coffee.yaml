@@ -1,0 +1,178 @@
+version: 1.0.0
+id: filter_coffee
+name: Filter Coffee
+category: hot_beverage
+available: true
+
+description: >
+  Batch brew filter coffee using the same Ethiopia Yirgacheffe single-origin
+  as our espresso. Medium-coarse grind, SCA standard 1:16.7 ratio. Brewed
+  fresh every 30 minutes in a Moccamaster batch brewer and held in a thermal
+  airpot. The highest-margin product on the menu.
+
+preparation:
+  method: batch_brew
+  equipment:
+    - batch_brewer
+    - grinder_filter
+  steps:
+    - action: grind
+      setting: medium_coarse
+      particle_size_um: 750-1000
+      note: dedicated filter grinder, separate from espresso
+    - action: dose
+      mass_g: 60.0
+      tolerance_g: 1.0
+      batch_water_ml: 1000
+      ratio: "1:16.7"
+      note: SCA standard brew ratio
+    - action: brew
+      temperature_c: 94.0
+      tolerance_c: 2.0
+      brew_time_min: 4-6
+      batch_size_ml: 1800
+      servings_per_batch: 6
+      filter_type: paper
+    - action: hold
+      vessel: thermal_airpot
+      hold_temperature_c: 80-85
+      max_hold_time_min: 30
+      hotplate: never  # hotplate burns coffee
+      note: discard and rebrew after 30 minutes — stale filter coffee is brand damage
+    - action: serve
+      vessel: ceramic_mug
+      vessel_volume_ml: 350
+      alternative_vessel: paper_cup
+      alternative_vessel_volume_ml: 350
+
+ingredients:
+  - id: coffee_beans
+    name: Ethiopia Yirgacheffe
+    type: arabica
+    origin: Yirgacheffe, Ethiopia
+    altitude_m: 1750-2200
+    processing: washed
+    roast_level: medium
+    roast_temperature_c: 210-220
+    supplier:
+      name: Nordic Roasters GmbH
+      origin_certification: direct_trade
+    quantity_per_batch_g: 60.0
+    quantity_per_serving_g: 10.0
+    cost_per_kg: 23.00
+    cost_per_serving: 0.23
+
+  - id: water
+    type: filtered
+    tds_ppm: 100-150  # SCA recommendation: 75-250, target 150
+    temperature_c: 94.0
+    quantity_per_serving_ml: 300
+    cost_per_serving: 0.01
+
+  - id: paper_filter
+    type: consumable
+    description: Paper filter amortized across 6-serving batch
+    cost_per_batch: 0.12
+    cost_per_serving: 0.02
+
+nutrition:
+  # Computed per serving (300ml black filter coffee)
+  # Longer extraction time and larger volume yield more caffeine than espresso
+  serving_size_ml: 300
+  energy_kcal: 2
+  fat_g: 0.0
+  saturated_fat_g: 0.0
+  carbohydrates_g: 0.0
+  sugars_g: 0.0
+  fiber_g: 0.0
+  protein_g: 0.3
+  salt_g: 0.0
+  caffeine_mg: 95
+
+allergens:
+  declared: []
+  cross_contamination:
+    - allergen: tree_nuts
+      source: shared_grinder_for_flavored_beans
+      risk: negligible
+      mitigation: dedicated_filter_grinder
+
+cost:
+  ingredients:
+    coffee_beans: 0.23
+    water: 0.01
+  consumables:
+    filter: 0.02
+    cup: 0.00  # ceramic mug, in-house
+  total_cogs: 0.26
+  currency: USD
+  notes:
+    takeaway_cup_cost: 0.12
+    takeaway_total_cogs: 0.38
+
+pricing:
+  price: 3.50
+  currency: USD
+  margin_pct: 92.6
+  notes:
+    takeaway_margin_pct: 89.1
+
+modifiers:
+  - id: add_oat_milk
+    description: Add splash of Oatly Barista oat milk (30ml)
+    price_adjustment: 0.50
+    ingredient_add:
+      id: oat_milk
+      reference: products/oat_latte.yaml#ingredients.oat_milk
+      quantity_ml: 30
+    nutrition_adjustment:
+      # Oatly Barista per 100ml: 59 kcal, 2.8g fat, 0.3g sat fat,
+      # 6.7g carbs, 4.1g sugars, 0.8g fiber, 0.6g protein, 0.10g salt
+      # 30ml = x0.3:
+      energy_kcal: 18
+      fat_g: 0.8
+      saturated_fat_g: 0.1
+      carbohydrates_g: 2.0
+      sugars_g: 1.2
+      fiber_g: 0.2
+      protein_g: 0.2
+      salt_g: 0.03
+    cogs_adjustment: 0.12  # 30ml at $4.00/L
+    allergen_change:
+      adds: [oats]
+
+  - id: add_regular_milk
+    description: Add splash of whole milk (30ml)
+    price_adjustment: 0.00
+    ingredient_add:
+      id: whole_milk
+      reference: products/cappuccino.yaml#ingredients.whole_milk
+      quantity_ml: 30
+    nutrition_adjustment:
+      # Whole milk per 100ml: 64 kcal, 3.3g fat, 2.1g sat fat,
+      # 4.7g carbs, 4.7g sugars, 3.3g protein, 0.05g salt
+      # 30ml = x0.3:
+      energy_kcal: 19
+      fat_g: 1.0
+      saturated_fat_g: 0.6
+      carbohydrates_g: 1.4
+      sugars_g: 1.4
+      fiber_g: 0.0
+      protein_g: 1.0
+      salt_g: 0.02
+    cogs_adjustment: 0.06  # 30ml at $2.00/L
+    allergen_change:
+      adds: [milk]
+
+  - id: large
+    description: Large serving (450ml, 1.5x standard)
+    price_adjustment: 1.00
+    nutrition_adjustment:
+      # 1.5x standard serving
+      energy_kcal: 1
+      fat_g: 0.0
+      carbohydrates_g: 0.0
+      sugars_g: 0.0
+      protein_g: 0.2
+      caffeine_mg: 48
+    cogs_adjustment: 0.12  # 5g additional coffee

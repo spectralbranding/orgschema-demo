@@ -1,0 +1,142 @@
+version: 1.0.0
+id: cappuccino
+name: Cappuccino
+category: hot_beverage
+available: true
+
+description: >
+  Classic Italian-style cappuccino. Equal thirds espresso, steamed milk,
+  and dense microfoam in a 180ml (6oz) ceramic cup. Whole milk standard.
+
+preparation:
+  method: espresso_and_steamed_milk
+  equipment:
+    - espresso_machine
+    - steam_wand
+  steps:
+    - action: pull_espresso
+      reference: products/espresso.yaml
+      dose_g: 18.0
+      yield_ml: 36
+    - action: steam_whole_milk
+      starting_volume_ml: 120
+      target_temperature_c: 65
+      tolerance_c: 2
+      technique: microfoam
+      foam_depth_mm: 12-18
+      texture: dense_velvety
+    - action: combine
+      sequence:
+        - pour_espresso_into_cup
+        - pour_steamed_milk_with_foam
+        - latte_art_optional
+    - action: serve
+      vessel: ceramic_cup
+      vessel_volume_ml: 180
+
+ingredients:
+  - id: espresso
+    reference: products/espresso.yaml
+    quantity_per_serving_ml: 36
+    cost_per_serving: 0.42
+
+  - id: whole_milk
+    name: Whole Cow's Milk (3.5% fat)
+    type: dairy_milk
+    supplier:
+      name: Milchwerke Berlin GmbH
+      country: Germany
+    quantity_per_serving_ml: 120
+    cost_per_liter: 2.00
+    cost_per_serving: 0.24
+    nutrition_per_100ml:
+      energy_kcal: 64
+      fat_g: 3.3
+      saturated_fat_g: 2.1
+      carbohydrates_g: 4.7
+      sugars_g: 4.7
+      fiber_g: 0.0
+      protein_g: 3.3
+      salt_g: 0.05
+
+nutrition:
+  # Computed per serving:
+  # Espresso 36ml: 2 kcal, 0g fat, 0.3g carbs, 0.3g protein, 63mg caffeine
+  # Whole milk 120ml (x1.2 from per-100ml): 76.8 kcal, 3.96g fat, 2.52g sat fat,
+  #   5.64g carbs, 5.64g sugars, 3.96g protein, 0.06g salt
+  # Totals (rounded to 1 decimal):
+  serving_size_ml: 156  # 36 espresso + 120 milk (foam is aerated milk, same volume)
+  energy_kcal: 79
+  fat_g: 4.0
+  saturated_fat_g: 2.5
+  carbohydrates_g: 5.9
+  sugars_g: 5.6
+  fiber_g: 0.0
+  protein_g: 4.3
+  salt_g: 0.06
+  caffeine_mg: 63
+
+allergens:
+  declared:
+    - allergen: milk
+      source: whole_milk
+  cross_contamination:
+    - allergen: oats
+      source: shared_steam_wand
+      risk: low
+      mitigation: purge_and_wipe_wand_between_plant_and_dairy_milk
+    - allergen: tree_nuts
+      source: shared_equipment
+      risk: negligible
+      mitigation: dedicated_grinder_for_unflavored
+
+cost:
+  ingredients:
+    espresso: 0.42
+    whole_milk: 0.24
+  consumables:
+    cup: 0.12  # ceramic cup amortized wash cost
+  total_cogs: 0.78
+  currency: USD
+
+pricing:
+  price: 4.50
+  currency: USD
+  margin_pct: 82.7
+
+modifiers:
+  - id: add_shot
+    description: Add extra espresso shot (18g/36ml)
+    price_adjustment: 1.50
+    nutrition_adjustment:
+      energy_kcal: 2
+      caffeine_mg: 63
+    cogs_adjustment: 0.42
+
+  - id: oat_milk
+    description: Swap whole milk for Oatly Barista oat milk
+    price_adjustment: 0.50
+    ingredient_swap:
+      remove: whole_milk
+      add: oat_milk
+      reference: products/oat_latte.yaml#ingredients.oat_milk
+    nutrition_override:
+      energy_kcal: 73
+      fat_g: 3.4
+      saturated_fat_g: 0.4
+      carbohydrates_g: 8.3
+      sugars_g: 4.9
+      fiber_g: 1.0
+      protein_g: 1.0
+      salt_g: 0.12
+      caffeine_mg: 63
+    allergen_change:
+      removes: [milk]
+      adds: [oats]
+
+  - id: extra_foam
+    description: Extra thick foam layer (dry cappuccino)
+    price_adjustment: 0.00
+    preparation_override:
+      foam_depth_mm: 20-25
+      technique: dry_foam

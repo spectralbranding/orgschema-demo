@@ -1,0 +1,198 @@
+version: 1.0.0
+
+standard: ISO 22000:2018
+methodology: HACCP (Hazard Analysis and Critical Control Points)
+scope: "Spectra Coffee flagship location — hot beverages and bakery items"
+last_review: 2026-01-15
+next_review: 2027-01-15
+responsible: manager
+
+prerequisite_programs:
+  - id: prp_01
+    name: Supplier approval
+    description: All suppliers must provide certificates of conformity and allergen declarations
+    verification: annual_audit
+  - id: prp_02
+    name: Pest control
+    description: Monthly pest control service, continuous monitoring traps
+    provider: external_contractor
+    frequency: monthly
+  - id: prp_03
+    name: Water quality
+    description: Filtered water system tested for TDS, microbiological safety
+    frequency: quarterly
+    parameter: tds_ppm
+    acceptable_range: [100, 150]  # aligned with product spec (SCA target: 150 ppm)
+  - id: prp_04
+    name: Waste management
+    description: Separation of organic, recyclable, and general waste
+    frequency: daily
+    documentation: waste_log
+
+critical_control_points:
+
+  - id: ccp_01
+    name: Milk cold storage temperature
+    process_reference: products/oat_latte.yaml, products/cappuccino.yaml
+    hazard:
+      type: biological
+      agent: pathogenic_bacteria (Listeria, Salmonella)
+      severity: high
+      likelihood: moderate
+    parameter: storage_temperature_c
+    critical_limit:
+      max_c: 5.0
+      target_c: 3.0
+    monitoring:
+      method: digital_thermometer_with_data_logger
+      frequency: continuous
+      alert_threshold_c: 4.0
+      responsible: shift_lead
+    corrective_action:
+      - condition: temperature > 5.0 for < 30 min
+        action: investigate_cause, adjust_refrigeration, re_check_in_15_min
+      - condition: temperature > 5.0 for >= 30 min
+        action: discard_affected_stock, log_incident, notify_manager
+      - condition: temperature > 8.0 at any time
+        action: immediate_discard_all_dairy, equipment_service_call
+    telemetry:
+      source: refrigerator_sensor_01
+      protocol: mqtt
+      topic: spectra/flagship/fridge/temp
+      interval_s: 60
+
+  - id: ccp_02
+    name: Espresso brew temperature
+    process_reference: products/espresso.yaml
+    hazard:
+      type: biological
+      agent: insufficient_extraction (pathogen survival in water)
+      severity: low
+      likelihood: low
+    parameter: brew_temperature_c
+    critical_limit:
+      min_c: 90.0
+      max_c: 96.0
+      target_c: 93.0
+    monitoring:
+      method: machine_PID_sensor
+      frequency: continuous
+      responsible: barista
+    corrective_action:
+      - condition: temperature < 90.0 or > 96.0
+        action: halt_service, recalibrate_machine, test_with_thermometer
+      - condition: repeated_deviation (>3 per shift)
+        action: machine_out_of_service, call_technician
+    telemetry:
+      source: espresso_machine_group_head
+      protocol: modbus
+      register: brew_temp
+      interval_s: per_extraction
+
+  - id: ccp_03
+    name: Bakery display temperature and time
+    process_reference: products/croissant.yaml
+    hazard:
+      type: biological
+      agent: Bacillus_cereus, Staphylococcus_aureus
+      severity: moderate
+      likelihood: moderate
+    parameter: display_time_and_temperature
+    critical_limit:
+      max_display_time_h: 8
+      max_ambient_temp_c: 25.0
+    monitoring:
+      method: timestamped_placement_log + ambient_thermometer
+      frequency: every_placement + hourly_temp_check
+      responsible: barista
+    corrective_action:
+      - condition: display_time > 8h
+        action: discard_item, log_waste
+      - condition: ambient_temp > 25.0
+        action: reduce_batch_size, increase_check_frequency_to_30min
+      - condition: ambient_temp > 30.0
+        action: remove_all_bakery_items, suspend_bakery_service
+    telemetry:
+      source: display_case_sensor_01
+      protocol: mqtt
+      topic: spectra/flagship/display/temp
+      interval_s: 300
+
+  - id: ccp_04
+    name: Handwashing compliance
+    process_reference: all
+    hazard:
+      type: biological
+      agent: cross_contamination (E_coli, norovirus)
+      severity: high
+      likelihood: moderate
+    parameter: handwashing_frequency_and_technique
+    critical_limit:
+      required_events:
+        - before_shift_start
+        - after_break
+        - after_handling_waste
+        - after_touching_face_or_hair
+        - between_handling_allergen_groups
+        - after_cleaning_tasks
+      technique:
+        duration_s: 20
+        temperature_c: 38-42
+        soap: antibacterial_liquid
+        drying: single_use_paper_towel
+    monitoring:
+      method: visual_observation + handwash_log
+      frequency: per_event
+      responsible: shift_lead
+    corrective_action:
+      - condition: missed_handwash_observed
+        action: immediate_handwash, verbal_reminder, log_incident
+      - condition: repeated_non_compliance (>2 per shift)
+        action: remove_from_food_handling, retraining_required
+    telemetry:
+      source: soap_dispenser_counter
+      protocol: bluetooth_low_energy
+      metric: dispense_count_per_hour
+
+  - id: ccp_05
+    name: Cross-contamination prevention (allergens)
+    process_reference: compliance/allergen_management.yaml
+    hazard:
+      type: chemical_allergen
+      agent: milk, wheat, eggs, oats, tree_nuts
+      severity: critical  # anaphylaxis risk
+      likelihood: moderate
+    parameter: equipment_cleaning_between_allergen_groups
+    critical_limit:
+      steam_wand_purge: required_between_dairy_and_plant_milk
+      dedicated_equipment:
+        - grinder_for_unflavored_beans
+        - separate_tongs_for_bakery
+      surface_cleaning: between_allergen_groups
+    monitoring:
+      method: visual_checklist + ATP_swab_testing
+      frequency:
+        visual: per_drink_preparation
+        atp_swab: weekly
+      responsible: barista (visual), shift_lead (ATP)
+      atp_threshold:
+        pass_rlu: 30
+        fail_rlu: 100
+        caution_range_rlu: [31, 99]
+    corrective_action:
+      - condition: atp_swab > 100 RLU
+        action: deep_clean_equipment, re_swab, log_incident
+      - condition: allergen_incident_reported
+        action: halt_service, isolate_affected_product, notify_manager, file_incident_report
+    telemetry: null  # manual process, logged in hygiene_checklist
+
+documentation:
+  records_retention_years: 3
+  formats:
+    temperature_logs: digital (automated)
+    cleaning_checklists: paper + photo (shift end)
+    incident_reports: digital (within 24h)
+    waste_logs: paper (per discard event)
+  audit_trail:
+    internal_audit: quarterly
+    external_audit: annual (third-party certification body)

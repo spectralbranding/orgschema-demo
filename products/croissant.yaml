@@ -1,0 +1,129 @@
+version: 1.0.0
+id: croissant
+name: Classic Butter Croissant
+category: bakery
+available: true
+made_in_house: false
+
+description: >
+  Classic French-style butter croissant, supplier-sourced from an
+  artisan bakery. Laminated dough with European-style butter. Delivered
+  par-baked, finished in-house at 180C for 8 minutes.
+
+preparation:
+  method: finish_baking
+  equipment:
+    - convection_oven
+  steps:
+    - action: preheat_oven
+      temperature_c: 180
+      tolerance_c: 5
+    - action: place_par_baked_croissants
+      surface: parchment_lined_sheet_pan
+      spacing_cm: 5
+    - action: bake
+      duration_s: 480  # 8 minutes
+      target: golden_brown_surface, flaky_layers_visible
+    - action: cool
+      duration_s: 300  # 5 minutes minimum
+      surface: wire_rack
+    - action: transfer_to_display
+      location: ambient_display_case
+      max_display_time_h: 8
+
+ingredients:
+  - id: croissant_par_baked
+    name: Par-Baked Butter Croissant
+    supplier:
+      name: Boulangerie Schmidt GmbH
+      country: Germany
+    weight_per_unit_g: 70
+    cost_per_unit: 0.85
+    composition:
+      # Supplier-declared ingredients
+      wheat_flour: true
+      butter: true  # European-style, min 82% fat
+      water: true
+      sugar: true
+      yeast: true
+      salt: true
+      eggs: true  # egg wash
+      milk_powder: true
+
+nutrition:
+  # Per item (70g croissant), from supplier specification
+  serving_size_g: 70
+  energy_kcal: 280
+  fat_g: 15.0
+  saturated_fat_g: 8.5
+  carbohydrates_g: 30.0
+  sugars_g: 5.0
+  fiber_g: 1.0
+  protein_g: 5.5
+  salt_g: 0.70
+  caffeine_mg: 0
+
+allergens:
+  declared:
+    - allergen: wheat
+      contains_gluten: true
+      source: wheat_flour
+    - allergen: milk
+      source: butter, milk_powder
+    - allergen: eggs
+      source: egg_wash
+  cross_contamination:
+    - allergen: soy
+      source: supplier_facility
+      risk: low
+      mitigation: supplier_allergen_management_program
+    - allergen: tree_nuts
+      source: display_case_shared_with_nut_products
+      risk: moderate
+      mitigation: separate_tongs_and_shelf_position
+
+storage:
+  delivery:
+    state: frozen_par_baked
+    temperature_c: -18
+    tolerance_c: 3
+    shelf_life_days: 90
+  thawed:
+    temperature_c: 4
+    max_duration_h: 24
+  display:
+    type: ambient_display_case
+    temperature_c: 20-22  # ambient room temperature
+    max_display_time_h: 8
+    discard_policy:
+      action: discard
+      reason: staling_and_food_safety
+      documentation: waste_log
+      timestamp: required
+
+cost:
+  ingredients:
+    croissant_par_baked: 0.85
+  consumables:
+    bag: 0.00  # served on plate or in branded napkin
+  total_cogs: 0.85
+  currency: USD
+
+pricing:
+  price: 3.50
+  currency: USD
+  margin_pct: 75.7
+
+modifiers:
+  - id: warmed
+    description: Re-warm in oven (30s at 160C)
+    price_adjustment: 0.00
+    preparation_override:
+      action: warm
+      temperature_c: 160
+      duration_s: 30
+  - id: with_butter
+    description: Served with 10g butter portion on side
+    price_adjustment: 0.30
+    cogs_adjustment: 0.08
+    allergen_note: additional milk allergen from butter

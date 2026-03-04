@@ -1,0 +1,327 @@
+version: 1.0.0
+
+description: >
+  Opening and closing procedures for Spectra Coffee flagship location. Defines
+  the complete daily startup and shutdown sequence — equipment warmup, grinder
+  calibration, food safety checks, cash handling, and security. Designed so
+  that any trained barista can open or close the shop independently by
+  following this document.
+
+standards_reference:
+  - standard: ISO 22000:2018
+    clause: "8.5.1 — Control of hazards"
+    requirement: >
+      The organization shall implement and maintain prerequisite programs
+      and the HACCP plan to control identified hazards during daily
+      operations, including startup and shutdown procedures.
+
+# ---------------------------------------------------------------------------
+# Opening procedure (~30 min before doors open)
+# ---------------------------------------------------------------------------
+opening:
+  trigger: scheduled_open
+  reference: organization.yaml:locations.flagship.hours
+  lead_time_min: 30
+  responsible: shift_lead
+  staffing: minimum_2  # shift lead + 1 barista
+
+  steps:
+
+    - id: open_01
+      action: arrive_and_secure
+      time_min: 0
+      details:
+        - arrive: 30min before posted opening time
+        - disarm_alarm: enter code within 30s of entry
+        - lights: switch to pre-open setting (work lights, not customer ambience)
+        - visual_sweep: check for overnight issues (leaks, pest signs, forced entry)
+
+    - id: open_02
+      action: espresso_machine_startup
+      time_min: 2
+      details:
+        - power_on: switch machine from standby to full operating mode
+        - warmup_duration_min: 25-30  # machine-dependent; do not rush
+        - verify: boiler pressure reaches operating level on both steam and brew boilers
+        - note: >
+            Machine should have been left in standby at close (not powered off).
+            If machine is cold, allow 35-45min warmup and check for overnight
+            fault codes.
+      reference: processes/equipment_maintenance.yaml:daily
+
+    - id: open_03
+      action: grinder_calibration
+      time_min: 10
+      importance: critical  # single highest-impact daily quality task
+      details:
+        - precondition: espresso machine fully at temperature
+        - procedure: >
+            Pull 2-3 test shots, adjusting grind stepwise finer or coarser
+            until extraction hits target parameters. This is the "dial-in"
+            and must be done every morning without exception.
+        - target_parameters:
+            dose_g: 18.0
+            yield_ml: 36
+            time_s: 28
+            acceptable_range_s: [26, 30]
+            temperature_c: 93.0
+        - taste_assessment: >
+            Taste each test shot. Target flavor: sweet, balanced acidity,
+            clean finish. If bitter: grind coarser. If sour: grind finer.
+            Do not open until taste is correct — parameters are necessary
+            but not sufficient.
+        - record: >
+            Log grinder setting number, shot time, yield, and taster initials
+            on the daily calibration card.
+      reference: products/espresso.yaml:preparation
+      cross_reference: processes/quality_control.yaml:daily_calibration
+
+    - id: open_04
+      action: water_system_check
+      time_min: 2
+      details:
+        - filter_pressure: verify within normal operating range
+        - tds_measurement: test with refractometer
+        - acceptable_tds_ppm: [100, 150]
+        - action_if_out_of_range: >
+            If TDS outside 100-150 ppm, check filter status. Do not serve
+            espresso until water quality is confirmed. Log deviation.
+      reference: products/espresso.yaml:ingredients.water.tds_ppm
+      cross_reference: compliance/food_safety.yaml:prp_03
+
+    - id: open_05
+      action: refrigeration_check
+      time_min: 2
+      details:
+        - verify: all refrigerated items at or below 5C
+        - target_c: 3.0
+        - critical_limit_c: 5.0
+        - log: record temperature on daily temperature log
+        - action_if_above_5c: >
+            Investigate cause. If above 5C for unknown duration, assess stock
+            per corrective action in compliance/food_safety.yaml:ccp_01.
+      reference: compliance/food_safety.yaml:ccp_01
+
+    - id: open_06
+      action: display_case_setup
+      time_min: 5
+      details:
+        - croissants: >
+            Finish-bake par-baked croissants per products/croissant.yaml
+            preparation steps (180C, 8 min, cool 5 min on wire rack).
+        - delivery_temperature: if fresh delivery, verify receiving temperature
+        - placement_log: record timestamp of display placement
+        - timer: set 8h display timer from placement time
+        - max_display_time_h: 8
+      reference: products/croissant.yaml:storage.display
+      cross_reference: compliance/food_safety.yaml:ccp_03
+
+    - id: open_07
+      action: cash_and_pos
+      time_min: 3
+      details:
+        - cash_float: count opening float against expected amount, record
+        - pos_terminal: open and verify date, time, menu items loaded
+        - card_terminal: test connectivity with void transaction or terminal check
+        - action_if_card_down: >
+            Post "cash only" notice at door. Attempt terminal restart. If
+            unresolved in 10min, contact payment provider.
+
+    - id: open_08
+      action: front_of_house
+      time_min: 3
+      details:
+        - signage: place A-frame chalkboard at street position
+        - music: start playlist per schedule
+        - interior_temperature: verify thermostat at target
+        - target_temperature_c: 21
+        - tolerance_c: 1
+      reference: brand/identity.yaml:environment.music
+      cross_reference: brand/identity.yaml:environment.temperature
+
+    - id: open_09
+      action: final_quality_check
+      time_min: 2
+      details:
+        - taste: pull and taste one espresso shot (this is the "would I serve this?" test)
+        - verify: shot meets flavor profile described in open_03 taste assessment
+        - action_if_not_right: >
+            Re-calibrate grinder. Do not open until espresso quality is confirmed.
+            The first customer of the day should get a perfect shot.
+        - open: at exact posted opening time, unlock front door
+      reference: organization.yaml:locations.flagship.hours
+
+  anti_patterns:
+    - "Do not skip grinder calibration because 'yesterday's setting was fine.' Beans age overnight."
+    - "Do not open early to waiting customers before calibration is complete. Quality comes first."
+    - "Do not leave espresso machine powered fully off overnight. Standby maintains boiler temperature for faster morning startup."
+
+# ---------------------------------------------------------------------------
+# Closing procedure (~30 min after last customer)
+# ---------------------------------------------------------------------------
+closing:
+  trigger: scheduled_close
+  reference: organization.yaml:locations.flagship.hours
+  lead_time_min: 15  # last order announced 15min before close
+  post_close_duration_min: 30
+  responsible: shift_lead
+  staffing: minimum_2  # shift lead + 1 barista
+
+  steps:
+
+    - id: close_01
+      action: last_order_announcement
+      time_min: -15  # 15min before closing time
+      details:
+        - announce: "Last orders" to remaining customers
+        - pos: no new orders accepted after closing time
+      reference: processes/internal_communications.yaml:tone.principles
+
+    - id: close_02
+      action: espresso_machine_cleaning
+      time_min: 0  # begins after last customer departs
+      duration_min: 10
+      details:
+        - backflush:
+            method: >
+              Insert blind basket into portafilter. Add 2g espresso machine
+              cleaning detergent (Cafiza or Puly Caff). Lock into group head.
+              Run pump for 10s, stop for 10s. Repeat 5 cycles per group.
+              Remove blind basket, run clean water through group for 30s.
+            cycles_per_group: 5
+            detergent: espresso_machine_cleaner  # Cafiza, Puly Caff, or equivalent
+        - steam_wand:
+            purge: run steam for 5s to clear internal residue
+            wipe: clean exterior with damp cloth
+            soak: remove steam tip, soak in cleaning solution for 10min
+        - drip_trays: empty, wash with hot water, sanitize, replace
+        - portafilters: >
+            Remove baskets, soak baskets and portafilters in cleaning solution
+            for 10min, scrub, rinse, dry, re-insert baskets, leave portafilters
+            locked into group heads (maintains gasket shape).
+      cross_reference: processes/equipment_maintenance.yaml:daily
+
+    - id: close_03
+      action: grinder_cleaning
+      time_min: 10
+      duration_min: 5
+      details:
+        - hopper: remove, wipe clean (no water inside hopper)
+        - chamber: brush out retained grounds from burr chamber with grinder brush
+        - exterior: wipe down with dry cloth
+        - important: do NOT wash grinder components with water (damages burrs and motor)
+        - weekly: full burr disassembly and brush clean (see processes/equipment_maintenance.yaml:weekly)
+      cross_reference: processes/equipment_maintenance.yaml:weekly.grinder
+
+    - id: close_04
+      action: display_case_and_waste
+      time_min: 12
+      duration_min: 5
+      details:
+        - discard: remove any items past 8h display time
+        - log: record waste with timestamp, item name, quantity in waste log
+        - clean: wipe display case interior with food-safe sanitizer
+        - restock_prep: note any items needed for morning bake
+      reference: products/croissant.yaml:storage.display.discard_policy
+      cross_reference: compliance/food_safety.yaml:ccp_03
+
+    - id: close_05
+      action: refrigeration_final_check
+      time_min: 15
+      duration_min: 2
+      details:
+        - temperature: check and record final temperature reading
+        - critical_limit_c: 5.0
+        - stock: visual check of stock levels, note items expiring tomorrow
+        - door: ensure door seals fully closed
+      reference: compliance/food_safety.yaml:ccp_01
+
+    - id: close_06
+      action: surfaces_and_sanitation
+      time_min: 17
+      duration_min: 5
+      details:
+        - counters: wipe all prep surfaces with food-safe sanitizer
+        - milk_station: clean and sanitize milk pitcher area, rinse pitchers
+        - pos_area: wipe touchscreen and surroundings
+        - sinks: clean and sanitize
+        - sanitizer: use approved food-contact surface sanitizer at correct dilution
+
+    - id: close_07
+      action: waste_management
+      time_min: 22
+      duration_min: 3
+      details:
+        - separation: organics, recyclables, general waste
+        - transport: take all bins to external collection point
+        - reline: place fresh bin liners in all internal bins
+      reference: compliance/food_safety.yaml:prp_04
+
+    - id: close_08
+      action: floors
+      time_min: 25
+      duration_min: 5
+      details:
+        - sweep: full floor sweep, behind counter and front of house
+        - mop: mop with floor cleaner, pay attention to behind machine and under counters
+        - mats: shake out anti-fatigue mats, replace when dry
+
+    - id: close_09
+      action: cash_reconciliation
+      time_min: 25  # can run parallel with floors
+      duration_min: 5
+      details:
+        - count: count all cash in register
+        - reconcile: compare against POS totals for the day
+        - discrepancy: record any variance with amount and possible cause
+        - secure: place cash in safe or lockbox per security protocol
+        - pos: close out terminal for the day, print or save daily report
+
+    - id: close_10
+      action: equipment_shutdown
+      time_min: 28
+      duration_min: 2
+      details:
+        - oven: power off completely
+        - espresso_machine: >
+            Switch to standby mode (NOT full power off). Standby maintains
+            boiler at reduced temperature for faster morning warmup and
+            protects heating elements from thermal cycling.
+        - grinder: power off
+        - dishwasher: run final cycle if loaded, power off after cycle completes
+        - lights: switch to overnight/security lighting only
+      cross_reference: processes/equipment_maintenance.yaml:daily
+
+    - id: close_11
+      action: security
+      time_min: 30
+      duration_min: 2
+      details:
+        - water: verify all taps fully off
+        - windows: check all windows closed and locked
+        - doors: check back door locked
+        - final_walkthrough: visual sweep of entire premises
+        - alarm: set security alarm
+        - lock: lock front door, confirm deadbolt engaged
+
+    - id: close_12
+      action: shift_log
+      time_min: 30
+      duration_min: 3
+      details:
+        - complete: fill in closing notes in handover log
+        - content:
+            - total_sales_summary
+            - equipment_issues_encountered
+            - stock_items_running_low
+            - waste_logged
+            - any_incidents_or_customer_complaints
+            - notes_for_opening_shift
+        - sign: shift lead signs off with name and time
+      reference: processes/internal_communications.yaml:handover
+
+  anti_patterns:
+    - "Do not power off the espresso machine completely. Standby protects the boiler and saves 15min of morning warmup."
+    - "Do not skip the waste log. Unrecorded waste makes cost tracking impossible and hides quality problems."
+    - "Do not leave portafilters on the drip tray. Lock them into group heads to maintain gasket shape."
+    - "Do not rush cleaning to leave early. A poorly cleaned machine produces poor espresso tomorrow."

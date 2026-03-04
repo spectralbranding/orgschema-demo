@@ -1,0 +1,155 @@
+version: 1.0.0
+
+visual:
+  colors:
+    primary:
+      hex: "#2D1B0E"
+      name: espresso_brown
+      usage: backgrounds, headings, primary UI elements
+    secondary:
+      hex: "#F5E6D3"
+      name: oat_milk_cream
+      usage: backgrounds, cards, light surfaces
+    accent:
+      hex: "#4A7C59"
+      name: sage_green
+      usage: CTAs, sustainability markers, highlights
+    error:
+      hex: "#C0392B"
+      name: roast_red
+      usage: alerts, allergen warnings, out-of-stock
+    neutral:
+      hex: "#6B5B4E"
+      name: walnut
+      usage: body text, borders, secondary elements
+
+  typography:
+    display:
+      family: Space Grotesk
+      weights: [400, 500, 700]
+      usage: headings, hero text, signage
+    body:
+      family: Inter
+      weights: [400, 500, 600]
+      usage: descriptions, paragraphs, UI labels
+    mono:
+      family: JetBrains Mono
+      weights: [400, 500]
+      usage: menu prices, nutritional data, config references
+
+  logo:
+    format: svg
+    variants:
+      - id: full
+        description: Logomark + wordmark, horizontal layout
+        min_width_px: 120
+      - id: mark
+        description: Logomark only (spectral prism icon)
+        min_width_px: 24
+      - id: wordmark
+        description: "Spectra Coffee" text only
+        min_width_px: 80
+    min_size_px: 24
+    clear_space: 1x  # 1x the height of the mark on all sides
+    backgrounds:
+      allowed: ["#2D1B0E", "#F5E6D3", "#FFFFFF"]
+      forbidden: ["#4A7C59"]  # accent too close in value
+
+packaging:
+  cups:
+    sizes:
+      - id: small
+        volume_ml: 240
+        label: "S"
+      - id: medium
+        volume_ml: 360
+        label: "M"
+      - id: large
+        volume_ml: 480
+        label: "L"
+    material: double-wall paper
+    branding_elements:
+      - logo_variant: mark
+        position: front_center
+      - wordmark_variant: wordmark
+        position: back_upper
+      - accent_stripe:
+          color: "#4A7C59"
+          width_mm: 3
+          position: rim_band
+
+  bags:
+    material: kraft_paper
+    weight_g: 250
+    dimensions_mm:
+      width: 120
+      height: 200
+      depth: 70
+    branding_elements:
+      - logo_variant: full
+        position: front_center
+      - origin_label:
+          position: front_lower
+          fields: [origin, roast_level, roast_date, best_before]
+      - nutrition_panel:
+          position: back
+          standard: EU_1169_2011
+
+environment:
+  interior_palette:
+    walls: "#F5E6D3"       # oat milk cream
+    floor: "#2D1B0E"       # espresso brown, polished concrete stain
+    furniture: "#6B5B4E"   # walnut, natural wood
+    accents: "#4A7C59"     # sage green, plants and shelf brackets
+
+  temperature:
+    target_c: 21
+    tolerance_c: 1         # acceptable range: 20-22C
+    override:
+      condition: outside_temp_above_c > 30
+      target_c: 20         # cool down 1C when hot outside
+
+  lighting:
+    color_temperature_k: 2700
+    brightness_schedule:
+      - time: "07:00"
+        brightness_pct: 60
+      - time: "09:00"
+        brightness_pct: 80
+      - time: "12:00"
+        brightness_pct: 100
+      - time: "17:00"
+        brightness_pct: 70
+      - time: "19:00"
+        brightness_pct: 50
+
+  music:
+    schedule:
+      - period: morning
+        time: "07:00-12:00"
+        genre: jazz
+        max_db: 55
+      - period: afternoon
+        time: "12:00-17:00"
+        genre: lo-fi
+        max_db: 50
+      - period: evening
+        time: "17:00-20:00"
+        genre: acoustic
+        max_db: 45
+
+  signage:
+    menu_board:
+      type: digital
+      font: brand.visual.typography.mono
+      background: "#2D1B0E"
+      text_color: "#F5E6D3"
+      price_highlight: "#4A7C59"
+    exterior:
+      type: illuminated_box
+      logo_variant: full
+      illumination: warm_white_2700k
+    a_frame:
+      type: chalkboard
+      font: handwritten
+      content_rotation: daily

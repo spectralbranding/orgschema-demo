@@ -1,0 +1,136 @@
+version: 1.0.0
+
+description: >
+  Observer profiles model different perceiver types who encounter
+  Spectra Coffee through distinct modes, with different spectral
+  weights (attention allocation across SBT dimensions) and prior
+  states. These profiles drive signal-to-perception mapping.
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+
+profiles:
+
+  - id: morning_regular
+    name: Morning Regular
+    description: >
+      Daily visitor, 07:00-08:30 window. Orders the same drink
+      (usually espresso or cappuccino). Values speed, consistency,
+      and recognition. Has accumulated deep priors through repetition.
+    encounter_mode: habitual
+    visit_frequency: daily
+    typical_dwell_time_min: 5-10
+    priors: high  # deep accumulated experience, strong expectations
+
+    spectral_weights:
+      semiotic: 0.3      # recognizes brand codes but no longer actively processes them
+      narrative: 0.2      # origin story absorbed long ago, now background
+      temporal: 0.9       # highly attuned to rhythm — notices any deviation from routine
+      ideological: 0.4    # values aligned but taken for granted
+      economic: 0.2       # price insensitive due to habit; would notice a change
+      experiential: 0.8   # primary driver — taste, temperature, speed, comfort
+      cultural: 0.3       # cultural belonging established, not actively evaluated
+      social: 0.7         # relationship with staff matters; recognition is valued
+
+    sensitivity:
+      positive_signal: low    # diminishing returns on familiar positives
+      negative_signal: high   # any deviation from expected experience is amplified
+      novel_signal: moderate  # new menu item might catch attention
+
+  - id: weekend_explorer
+    name: Weekend Explorer
+    description: >
+      First-time or occasional visitor, typically Saturday/Sunday.
+      Browsing the menu, taking photos, evaluating whether this
+      becomes "their spot." High attention to all signals.
+    encounter_mode: exploratory
+    visit_frequency: occasional
+    typical_dwell_time_min: 30-60
+    priors: low  # minimal prior experience, open perception field
+
+    spectral_weights:
+      semiotic: 0.9      # actively reading every visual code — logo, colors, packaging
+      narrative: 0.8      # wants the story — where is the coffee from, who runs this
+      temporal: 0.4       # less attuned to rhythm (no established pattern)
+      ideological: 0.7    # evaluating values alignment — sustainability, ethics
+      economic: 0.6       # comparing value proposition to alternatives
+      experiential: 0.9   # sensory experience is primary evaluation criterion
+      cultural: 0.8       # assessing cultural fit — is this "my kind of place"
+      social: 0.5         # observing other customers, staff demeanor, vibe
+
+    sensitivity:
+      positive_signal: high   # every positive signal contributes to first impression
+      negative_signal: high   # single negative can terminate relationship before it starts
+      novel_signal: high      # everything is novel; full spectral activation
+
+  - id: delivery_app_agent
+    name: Delivery App Agent
+    description: >
+      Perceives Spectra Coffee through a delivery platform interface
+      (Wolt, Uber Eats). Never enters the physical space. Sees only
+      product photos, names, prices, and estimated delivery time.
+      Most brand signals are filtered out by the platform.
+    encounter_mode: mediated
+    visit_frequency: variable
+    typical_dwell_time_min: 0  # no physical visit
+    priors: minimal  # brand is one of many options in a scrollable list
+
+    spectral_weights:
+      semiotic: 0.4      # sees logo/photos but in platform-standardized format
+      narrative: 0.1      # origin story invisible — platform shows name and price
+      temporal: 0.1       # no temporal signals transmitted through app
+      ideological: 0.2    # sustainability claims may appear in description, mostly ignored
+      economic: 0.9       # price is dominant decision factor in delivery context
+      experiential: 0.3   # can only evaluate after delivery; pre-order = visual only
+      cultural: 0.1       # cultural signals stripped by platform mediation
+      social: 0.0         # zero social signal — no human interaction
+
+    sensitivity:
+      positive_signal: low    # platform flattens differentiation
+      negative_signal: moderate  # bad delivery experience attributed partly to brand
+      novel_signal: low       # browsing mode, low attention per listing
+
+    signal_loss:
+      # Signals that exist in-store but are invisible through this encounter mode
+      fully_lost:
+        - brand/identity.yaml:environment  # temperature, lighting, music
+        - brand/identity.yaml:visual.logo.clear_space  # platform controls layout
+      partially_transmitted:
+        - products/*.yaml:description  # truncated by platform character limits
+        - brand/identity.yaml:visual.colors  # compressed in thumbnail photos
+      fully_transmitted:
+        - products/*.yaml:pricing.price  # price always visible
+        - products/*.yaml:allergens.declared  # platforms require allergen data
+
+  - id: food_inspector
+    name: Food Safety Inspector
+    description: >
+      Regulatory authority representative conducting scheduled or
+      unannounced inspection. Perceives the operation exclusively
+      through compliance and safety parameters. Not a "customer"
+      but a critical observer whose perception determines
+      operational continuity.
+    encounter_mode: analytical
+    visit_frequency: quarterly_to_annual
+    typical_dwell_time_min: 60-120
+    priors: moderate  # professional training = strong expectations framework
+
+    spectral_weights:
+      semiotic: 0.1      # logo and branding irrelevant to inspection
+      narrative: 0.0      # origin story has zero bearing on compliance
+      temporal: 0.3       # checks time-stamped records (discard logs, cleaning schedules)
+      ideological: 0.1    # values claims irrelevant unless backed by process
+      economic: 0.0       # pricing is not within inspection scope
+      experiential: 0.2   # notes ambient conditions (cleanliness, odor, temperature)
+      cultural: 0.0       # cultural positioning irrelevant
+      social: 0.1         # observes staff hygiene behavior and training compliance
+
+    sensitivity:
+      positive_signal: low    # compliance is binary — pass or fail
+      negative_signal: extreme # single violation can result in closure order
+      novel_signal: low       # standardized inspection checklist, not exploratory
+
+    primary_config_references:
+      - compliance/food_safety.yaml      # HACCP plan is the primary document
+      - compliance/allergen_management.yaml  # allergen protocols
+      - products/*.yaml:allergens        # declared allergens per product
+      - products/*.yaml:storage          # storage and discard policies

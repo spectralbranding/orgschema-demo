@@ -1,0 +1,202 @@
+version: 1.0.0
+
+description: >
+  Level 0 of the Reverse-Design TDD cascade: the Customer Experience Contract.
+  These are the ACCEPTANCE TESTS that everything else must pass.
+  Every signal requirement, process contract, procedure, input spec, and
+  sourcing decision exists to satisfy these goals.
+
+  This file defines WHAT customers should perceive, feel, and experience
+  across all 8 SBT spectral dimensions. It does not specify HOW to achieve
+  these goals -- that is the job of Levels 1-5 in the cascade.
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+methodology_reference: "Config-org Reverse-Design TDD (NOTES_REVERSE_DESIGN_TDD.md)"
+
+# Who is this designed for?
+target_cohort:
+  primary: quality-conscious urban professional
+  secondary: specialty coffee enthusiast
+  anti_target: price-sensitive, speed-only, brand-indifferent
+  market: Berlin, Germany (European specialty coffee culture)
+
+# What perception should form in the target cohort's mind?
+desired_perception:
+  primary: "artisan craft, ethically sourced, premium but approachable"
+  secondary: "transparent, scientific precision without pretension"
+  tertiary: "a daily ritual space, not a destination event"
+
+anti_perception:
+  avoid:
+    - "mass-market or chain coffee"
+    - "pretentious or exclusionary"
+    - "impersonal, transactional"
+    - "gimmicky or trend-chasing"
+
+# Predicted coherence type (SBT classification)
+predicted_coherence_type: signal
+rationale: >
+  Spectra Coffee's specification architecture produces signal coherence:
+  standardized process specs (L1 signal requirements globally consistent),
+  reproducible across locations via config fork. Not ecosystem (not maximally
+  restrictive), not identity (no activist ideological dimension).
+
+# --- L0 Acceptance Tests by SBT Dimension ---
+# Each test specifies the desired perception, NOT the mechanism.
+# Signals and processes that satisfy these are defined at L1 and L2.
+
+experience_contract:
+
+  semiotic:
+    goal: >
+      Customer perceives a brand that is analytical, craft-oriented,
+      and material-honest. Visual codes communicate that coffee is treated
+      as a spectrum of measurable variables, not a commodity.
+    tests:
+      - id: L0_sem_01
+        assertion: "Visual identity reads as 'craft laboratory' not 'corporate chain'"
+        proxy_indicator: "First-time visitors describe aesthetic as 'clean,' 'minimal,' 'scientific'"
+      - id: L0_sem_02
+        assertion: "Brand color palette evokes raw material (coffee, milk, plant) not synthetic branding"
+        proxy_indicator: "Colors feel 'natural' and 'grounded' in observer feedback"
+      - id: L0_sem_03
+        assertion: "Packaging communicates care and intention, not disposability"
+        proxy_indicator: "Customers notice and remark on cup/bag design"
+
+  narrative:
+    goal: >
+      Customer perceives a story of origin, craft, and direct relationship
+      with producers. The supply chain is a visible character in the brand
+      narrative, not an invisible backstage function.
+    tests:
+      - id: L0_nar_01
+        assertion: "Customer can identify coffee origin without asking staff"
+        proxy_indicator: "Origin information visible on menu, packaging, or display"
+      - id: L0_nar_02
+        assertion: "Supply chain relationship feels 'direct' and 'human' not 'commodified'"
+        proxy_indicator: "Direct trade certification visible; roaster name known"
+      - id: L0_nar_03
+        assertion: "Brand story is discoverable but not imposed"
+        proxy_indicator: "Story elements present in environment for curious customers; not lecture-format"
+
+  temporal:
+    goal: >
+      Customer perceives a space with its own rhythm -- morning energy,
+      afternoon calm, evening warmth. The space marks time for regulars,
+      creating a predictable ritual anchor.
+    tests:
+      - id: L0_tem_01
+        assertion: "Space feels different at morning, afternoon, and evening visits"
+        proxy_indicator: "Music genre, lighting, and energy level shift perceptibly"
+      - id: L0_tem_02
+        assertion: "Regular visitors develop time-of-day habits"
+        proxy_indicator: "Repeat visit patterns cluster around specific time windows"
+      - id: L0_tem_03
+        assertion: "Consistency over time builds trust"
+        proxy_indicator: "Returning customers report 'same quality every time'"
+
+  ideological:
+    goal: >
+      Customer perceives an organization that operationalizes its values
+      rather than advertising them. Sustainability, quality, and transparency
+      are demonstrated through visible choices, not claimed through messaging.
+    tests:
+      - id: L0_ide_01
+        assertion: "Values are enacted, not advertised"
+        proxy_indicator: "No 'sustainability' slogans; sustainability visible in sourcing, waste policy, packaging"
+      - id: L0_ide_02
+        assertion: "Quality commitment is observable in product consistency"
+        proxy_indicator: "Espresso extraction parameters are precise and repeatable"
+      - id: L0_ide_03
+        assertion: "Transparency is operational, not performative"
+        proxy_indicator: "Ingredient sourcing and pricing structure available if asked"
+
+  economic:
+    goal: >
+      Customer perceives fair value -- premium pricing justified by
+      visible quality, not by brand markup. Pricing structure signals
+      which products are primary (plant-based default) vs. alternative.
+    tests:
+      - id: L0_eco_01
+        assertion: "Price feels 'fair for what you get' not 'expensive for coffee'"
+        proxy_indicator: "Customers do not cite price as primary complaint"
+      - id: L0_eco_02
+        assertion: "Pricing structure communicates values (plant milk default, dairy as modifier)"
+        proxy_indicator: "Customers notice and appreciate that oat milk is default"
+      - id: L0_eco_03
+        assertion: "No hidden costs or upselling pressure"
+        proxy_indicator: "Menu prices are clear; staff do not push upgrades"
+
+  experiential:
+    goal: >
+      Customer perceives excellence through sensory experience: taste,
+      aroma, temperature, texture, cleanliness, comfort. The physical
+      encounter confirms (or refutes) all other brand claims.
+    tests:
+      - id: L0_exp_01
+        assertion: "Espresso is balanced, sweet, clean -- no bitterness"
+        proxy_indicator: "Taste quality rated 4+/5 by specialty coffee drinkers"
+      - id: L0_exp_02
+        assertion: "Environment is comfortable -- temperature, noise, cleanliness"
+        proxy_indicator: "Dwell time > 15 min for seated customers; no complaints about conditions"
+      - id: L0_exp_03
+        assertion: "Aroma of fresh coffee dominates the space"
+        proxy_indicator: "Customers remark on aroma when entering"
+      - id: L0_exp_04
+        assertion: "Delivery time is efficient without feeling rushed"
+        proxy_indicator: "Espresso served within 60-180 seconds; no perceived wait stress"
+
+  cultural:
+    goal: >
+      Customer perceives belonging to a community of quality-conscious,
+      design-aware, values-aligned individuals. The space communicates
+      European third-wave coffee culture without exclusionary gatekeeping.
+    tests:
+      - id: L0_cul_01
+        assertion: "Space reads as 'Berlin specialty coffee' not 'American chain' or 'Italian tradition'"
+        proxy_indicator: "Design language, music, clientele match Berlin third-wave codes"
+      - id: L0_cul_02
+        assertion: "Atmosphere is welcoming to newcomers, not intimidating"
+        proxy_indicator: "First-time visitors feel comfortable ordering; menu is accessible"
+      - id: L0_cul_03
+        assertion: "Handwritten/human elements prevent sterile-clinical feeling"
+        proxy_indicator: "Daily chalkboard, visible barista craft, plant life"
+
+  social:
+    goal: >
+      Customer perceives inclusive, competent, unhurried hospitality.
+      Staff are knowledgeable but not condescending. Dietary restrictions
+      are anticipated, not accommodated as exceptions. Regulars feel
+      recognized; newcomers feel welcome.
+    tests:
+      - id: L0_soc_01
+        assertion: "Greeting within 10 seconds of entering"
+        proxy_indicator: "Staff acknowledges every customer on entry"
+      - id: L0_soc_02
+        assertion: "Service tone is warm, competent, unhurried"
+        proxy_indicator: "Staff interactions feel 'friendly and professional' not 'scripted' or 'rushed'"
+      - id: L0_soc_03
+        assertion: "Dietary needs proactively addressed"
+        proxy_indicator: "Allergen information offered before requested; plant-based is default"
+      - id: L0_soc_04
+        assertion: "Regular customers feel recognized as individuals"
+        proxy_indicator: "Staff remember orders or names for daily visitors"
+
+# --- Aggregate Metrics ---
+
+satisfaction_targets:
+  overall_nps: ">= 50"
+  repeat_visit_rate_30d: ">= 40%"
+  avg_google_rating: ">= 4.5"
+  word_of_mouth_referral_pct: ">= 25%"
+  complaint_rate_per_100_visits: "< 2"
+
+# --- Validation Method ---
+# How do we know these acceptance tests pass?
+
+validation:
+  primary: "Customer feedback surveys (monthly, n >= 30)"
+  secondary: "Mystery shopping (quarterly, 2 assessors per visit)"
+  tertiary: "Online review sentiment analysis (continuous)"
+  sbt_analysis: "Cross-model spectral profile analysis (semi-annual)"
+  config_org: "CI/CD pipeline traces every process change back to this contract"

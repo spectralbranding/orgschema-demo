@@ -1,0 +1,218 @@
+version: 1.0.0
+
+description: >
+  SBT cohort perception analysis for Spectra Coffee. Shows how each
+  observer type (from signals/observer-profiles.yaml) perceives the
+  SAME operational specification differently. Same L1 signals, different
+  L2 collapses. This demonstrates SBT's core claim: perception is
+  observer-dependent, not signal-determined.
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+source_profiles: "signals/observer-profiles.yaml"
+source_signals: "signals/signal-map.yaml"
+source_specs: "perception/spectral_profile.yaml"
+
+# --- Cohort Perception Analyses ---
+# Each cohort receives the same signal set but perceives it differently
+# because of different spectral weights (attention allocation) and priors.
+
+cohort_analyses:
+
+  morning_regular:
+    observer_profile: morning_regular
+    encounter_mode: habitual
+    priors: high
+
+    # Effective spectral profile = brand profile * observer weights
+    # The observer's attention allocation filters which dimensions matter
+    perceived_profile:
+      semiotic: 2.1       # brand: 7 * weight: 0.3 -- codes absorbed, no longer processed
+      narrative: 1.2       # brand: 6 * weight: 0.2 -- origin story is background noise
+      temporal: 6.3        # brand: 7 * weight: 0.9 -- DOMINANT: rhythm is everything
+      ideological: 2.8     # brand: 7 * weight: 0.4 -- values taken for granted
+      economic: 1.0        # brand: 5 * weight: 0.2 -- price insensitive, habit-locked
+      experiential: 7.2    # brand: 9 * weight: 0.8 -- taste/speed is primary driver
+      cultural: 1.8        # brand: 6 * weight: 0.3 -- belonging established, not re-evaluated
+      social: 4.2          # brand: 6 * weight: 0.7 -- staff recognition matters
+
+    dominant_perception: >
+      "My morning coffee place. They know my order. It always tastes right.
+      I'd notice immediately if something changed."
+    perception_type: ritual_anchor
+    brand_risk: >
+      High sensitivity to negative deviation (any change in taste,
+      temperature, or routine triggers amplified negative signal).
+      Low sensitivity to positive signals (diminishing returns on
+      familiar positives). The morning regular's perception is maintained
+      by CONSISTENCY, not by EXCELLENCE. Any specification change that
+      affects the temporal or experiential dimensions must be tested
+      against this cohort's expectations.
+
+    sbt_dynamics:
+      conviction_state: crystallized
+      signal_decay: minimal  # daily reinforcement prevents decay
+      path_dependency: >
+        The morning regular's perception was formed by the SEQUENCE of
+        early positive experiences. Current high conviction is path-dependent --
+        a different sequence (e.g., bad first espresso, then recovery) would
+        produce a different conviction state even if current quality is identical.
+
+  weekend_explorer:
+    observer_profile: weekend_explorer
+    encounter_mode: exploratory
+    priors: low
+
+    perceived_profile:
+      semiotic: 6.3       # brand: 7 * weight: 0.9 -- actively reading every code
+      narrative: 4.8       # brand: 6 * weight: 0.8 -- wants the story
+      temporal: 2.8        # brand: 7 * weight: 0.4 -- no routine to compare against
+      ideological: 4.9     # brand: 7 * weight: 0.7 -- evaluating values alignment
+      economic: 3.0        # brand: 5 * weight: 0.6 -- comparing to alternatives
+      experiential: 8.1    # brand: 9 * weight: 0.9 -- primary evaluation criterion
+      cultural: 4.8        # brand: 6 * weight: 0.8 -- assessing cultural fit
+      social: 3.0          # brand: 6 * weight: 0.5 -- observing vibe
+
+    dominant_perception: >
+      "This place takes coffee seriously. Clean design, good espresso,
+      nice atmosphere. Could be my regular spot. The oat milk default
+      is a nice touch."
+    perception_type: evaluation_window
+    brand_risk: >
+      High sensitivity to BOTH positive and negative signals (full spectral
+      activation). Single negative signal can terminate the relationship
+      before it starts. This cohort is the most EXPENSIVE to lose because
+      they represent future morning regulars. The specification must ensure
+      first-visit excellence across ALL dimensions simultaneously.
+
+    sbt_dynamics:
+      conviction_state: forming
+      signal_decay: rapid  # without reinforcement, first impression fades
+      path_dependency: >
+        The weekend explorer's future conviction depends entirely on
+        first-visit experience. A strong first visit + follow-up creates
+        the path toward morning_regular. A weak first visit eliminates
+        the relationship permanently (absorbing negative state for
+        low-prior observers).
+
+  delivery_app_agent:
+    observer_profile: delivery_app_agent
+    encounter_mode: mediated
+    priors: minimal
+
+    perceived_profile:
+      semiotic: 2.8       # brand: 7 * weight: 0.4 -- platform-compressed logo only
+      narrative: 0.6       # brand: 6 * weight: 0.1 -- invisible through platform
+      temporal: 0.7        # brand: 7 * weight: 0.1 -- no temporal signals through app
+      ideological: 1.4     # brand: 7 * weight: 0.2 -- may see 'sustainable' tag, mostly ignored
+      economic: 4.5        # brand: 5 * weight: 0.9 -- DOMINANT: price + delivery fee
+      experiential: 2.7    # brand: 9 * weight: 0.3 -- only post-delivery; pre-order = visual
+      cultural: 0.6        # brand: 6 * weight: 0.1 -- stripped by platform
+      social: 0.0          # brand: 6 * weight: 0.0 -- zero social signal
+
+    dominant_perception: >
+      "Coffee shop, 4.5 stars, EUR 3.50 espresso + EUR 2.90 delivery.
+      Looks good in the photo."
+    perception_type: commodified_listing
+    brand_risk: >
+      Platform mediation destroys 6 of 8 spectral dimensions. Spectra Coffee
+      is perceived as a commodity listing competing on price, rating, and
+      delivery time. The specification depth that defines the brand is
+      INVISIBLE to this cohort. This is SBT's experiential asymmetry in
+      action: same brand, same products, profoundly different perception
+      due to encounter mode.
+
+    sbt_dynamics:
+      conviction_state: absent
+      signal_decay: instant  # no signal reinforcement mechanism
+      path_dependency: >
+        No path forms. Each delivery order is an independent transaction.
+        Non-ergodic dynamics are irrelevant because there is no accumulation --
+        the observer never develops priors.
+
+    signal_loss_analysis:
+      dimensions_fully_lost: [temporal, cultural, social]
+      dimensions_severely_degraded: [narrative, ideological, experiential]
+      dimensions_partially_retained: [semiotic, economic]
+      implication: >
+        Delivery channel reduces Spectra Coffee from an 8-dimensional brand
+        to effectively a 2-dimensional one (semiotic + economic). The D/A ratio
+        becomes undefined: no ambient signals are transmitted through the platform,
+        but the remaining designed signals are platform-mediated (not brand-controlled).
+        This is why delivery platforms erode brand value for specification-rich brands.
+
+  food_inspector:
+    observer_profile: food_inspector
+    encounter_mode: analytical
+    priors: moderate
+
+    perceived_profile:
+      semiotic: 0.7       # brand: 7 * weight: 0.1 -- branding is irrelevant
+      narrative: 0.0       # brand: 6 * weight: 0.0 -- origin story has zero bearing
+      temporal: 2.1        # brand: 7 * weight: 0.3 -- checks timestamps and records
+      ideological: 0.7     # brand: 7 * weight: 0.1 -- claims mean nothing without process
+      economic: 0.0        # brand: 5 * weight: 0.0 -- outside inspection scope
+      experiential: 1.8    # brand: 9 * weight: 0.2 -- notes ambient conditions (cleanliness)
+      cultural: 0.0        # brand: 6 * weight: 0.0 -- cultural positioning is irrelevant
+      social: 0.6          # brand: 6 * weight: 0.1 -- observes staff hygiene behavior
+
+    dominant_perception: >
+      "HACCP plan is documented with 5 CCPs, temperature records are current,
+      allergen matrix is complete, staff training logs are up to date.
+      Pass with no critical findings."
+    perception_type: compliance_assessment
+    brand_risk: >
+      Binary perception: pass or fail. The inspector's spectral profile is
+      entirely defined by regulatory requirements -- zero subjective weighting.
+      A single critical violation overrides all other signals. This is SBT's
+      most extreme observer type: perception is 100% rule-based, 0% affective.
+
+    sbt_dynamics:
+      conviction_state: assessment
+      signal_decay: irrelevant  # each inspection is independent
+      path_dependency: >
+        Previous inspection history creates a prior but the inspector is
+        trained to evaluate current state independently. The inspector
+        represents the closest thing to an ergodic observer: ensemble
+        average (what do inspections find across all restaurants) approximates
+        time average (what do repeated inspections find at this restaurant).
+
+# --- Cross-Cohort Comparison ---
+
+comparison:
+  same_signals_different_perceptions:
+    example_signal: "sig_08 (croissant discard policy, 8-hour freshness window)"
+    morning_regular: "Notices fresh croissants available; would notice if stale (temporal/experiential)"
+    weekend_explorer: "Reads freshness claim on menu; evaluates quality commitment (ideological)"
+    delivery_app_agent: "Invisible -- delivery platform does not transmit freshness policy"
+    food_inspector: "Checks discard logs for compliance with food safety regulation (temporal)"
+
+  same_specification_different_brand:
+    conclusion: >
+      The same operational specification (17 YAML files) produces FOUR
+      fundamentally different brand perceptions depending on observer type.
+      This is SBT's core claim demonstrated through config-org: brand is
+      not a property of the business -- it is a property of the observer's
+      perception of the business. Config-org specifies the EMISSION side.
+      SBT models the PERCEPTION side. Neither alone tells the full story.
+
+  design_implications:
+    - dimension: experiential
+      note: >
+        All cohorts except delivery_app_agent perceive experiential signals.
+        This validates experiential as the core dimension for this brand.
+        The specification should optimize experiential quality above all else.
+    - dimension: economic
+      note: >
+        Only the delivery_app_agent is price-dominant. The target cohort
+        (morning_regular, weekend_explorer) is price-moderate. Pricing
+        optimization should NOT be at the expense of experiential quality.
+    - dimension: social
+      note: >
+        Social dimension is entirely executor-dependent (human barista
+        generates it; machine does not). This dimension cannot be validated
+        through specification alone -- it requires observer research.
+    - dimension: temporal
+      note: >
+        Temporal dimension is critical for retention (morning_regular) but
+        irrelevant for acquisition (delivery_app_agent). Different cohorts
+        in the customer lifecycle weight this dimension differently.

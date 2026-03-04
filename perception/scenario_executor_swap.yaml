@@ -1,0 +1,313 @@
+version: 1.0.0
+
+description: >
+  What-if scenario: Spectra Coffee switches from human barista to
+  fully automated espresso system. Same process contracts (tests),
+  different procedures (implementation). This demonstrates:
+  1. Config-org: contracts don't change when you swap executor (TDD)
+  2. SBT: executor choice changes the spectral profile (brand decision)
+  3. Convergence: the SAME operational change viewed from both frameworks
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+methodology_reference: "Config-org Reverse-Design TDD (NOTES_REVERSE_DESIGN_TDD.md)"
+
+# --- Scenario Definition ---
+
+scenario:
+  name: "Executor Swap: Human Artisan -> Fully Automated"
+  description: >
+    Replace all human baristas with a fully automated espresso system.
+    Robot arm handles dosing, tamping, extraction, milk steaming, and
+    serving. No human contact during preparation. Staff remain for
+    greeting, order-taking, table service, and problem resolution.
+
+  trigger: "Labor cost optimization, consistency improvement, or scaling requirement"
+
+  constraints:
+    - "Same menu (6 products)"
+    - "Same ingredients (Ethiopia Yirgacheffe, Oatly, etc.)"
+    - "Same quality gates (extraction parameters)"
+    - "Staff for customer interaction remain (greeting, order-taking)"
+
+# --- Config-Org Analysis (TDD View) ---
+
+config_org_analysis:
+
+  contracts_unchanged:
+    description: "Process contracts (tests) do NOT change. Same quality gates."
+    examples:
+      - gate: "extraction_time_s: [26, 30]"
+        status: unchanged
+      - gate: "temperature_c: [92, 94]"
+        status: unchanged
+      - gate: "dose_g: [17.7, 18.3]"
+        status: unchanged
+      - gate: "foam_depth_mm: [12, 18]"
+        status: unchanged
+      - gate: "discard_policy: mandatory, 8h max"
+        status: unchanged
+    conclusion: >
+      All L2 process contracts pass with either executor. The automated
+      system must meet the SAME quality gates as the human barista.
+      This is TDD: tests don't change when you refactor implementation.
+
+  procedures_rewritten:
+    description: "Procedures (implementation) are completely different."
+    human_artisan:
+      steps: ["grind", "dose (18g)", "distribute + tamp (14-16kg)", "extract", "steam milk", "latte art", "serve"]
+      feedback: "visual, tactile, auditory (barista's senses)"
+      adjustment: "micro-adjustments by palate"
+    fully_automated:
+      steps: ["auto-grind (200-300um, sensor-calibrated)", "auto-dose (18.0g, load cell)", "auto-tamp (15kg, servo)", "auto-extract (93C, 9bar, flow sensor)", "auto-steam (65C, volume sensor)", "auto-serve (dispense to cup)"]
+      feedback: "sensor data: weight, temperature, pressure, flow rate, time"
+      adjustment: "algorithm adjusts grind size based on extraction flow rate"
+    conclusion: >
+      Different implementation, same tests. The automated system replaces
+      human senses (visual, tactile) with electronic sensors (load cell,
+      flow sensor, thermometer). Micro-adjustments move from barista's
+      palate to algorithm's feedback loop.
+
+  l0_contract_impact:
+    description: "Does the customer experience contract still pass?"
+    by_test:
+      - test: "L0_exp_01: Espresso balanced, sweet, clean"
+        verdict: PASS
+        notes: "Automated system may achieve HIGHER consistency than human"
+      - test: "L0_exp_04: Delivery time efficient without feeling rushed"
+        verdict: PASS
+        notes: "Automated system likely faster (no human variance)"
+      - test: "L0_soc_02: Service tone warm, competent, unhurried"
+        verdict: PARTIAL
+        notes: >
+          Staff still present for greeting and interaction, but the
+          PREPARATION is no longer a human performance. The warmth of
+          the preparation moment is lost. The social test passes for
+          interaction but fails for the craft-demonstration aspect.
+      - test: "L0_cul_03: Handwritten/human elements prevent sterile-clinical feeling"
+        verdict: FAIL
+        notes: >
+          The automated system eliminates the craft demonstration that
+          is a key cultural signal. The chalkboard and plants remain,
+          but the visible human craft (dosing, tamping, steaming) is
+          replaced by a machine operation. The space risks feeling
+          like a vending machine with good interior design.
+      - test: "L0_sem_01: Visual identity reads as craft laboratory"
+        verdict: DEGRADED
+        notes: >
+          The 'laboratory' aspect is preserved (precision, measurement),
+          but the 'craft' aspect is diminished. The spectral prism logo
+          still works, but the human craft it symbolizes is absent.
+
+# --- SBT Analysis (Perception View) ---
+
+sbt_analysis:
+
+  spectral_profile_delta:
+    description: "How each SBT dimension changes with executor swap."
+
+    semiotic:
+      before: 7
+      after: 6
+      delta: -1
+      reason: >
+        The spectral prism logomark and craft-laboratory visual codes
+        lose authenticity when the 'craft' is performed by a machine.
+        The visual system still works but the signifier-signified
+        relationship weakens. -1 for inauthenticity risk.
+
+    narrative:
+      before: 6
+      after: 5
+      delta: -1
+      reason: >
+        The barista-as-craftsperson is eliminated from the narrative.
+        Origin story (Ethiopia Yirgacheffe) remains, but the human
+        craft narrative is replaced by a technology narrative. -1 for
+        lost human element in the story.
+
+    temporal:
+      before: 7
+      after: 7
+      delta: 0
+      reason: >
+        Music schedule, lighting schedule, and daily rhythm are
+        unaffected by executor swap. Temporal dimension is
+        environment-driven, not executor-driven. No change.
+
+    ideological:
+      before: 7
+      after: 6
+      delta: -1
+      reason: >
+        The croissant discard policy and oat-milk default remain.
+        But the kaizen culture (sig_19: recognition over financial
+        incentives) and andon policy (sig_18: no-blame reporting)
+        become irrelevant -- machines don't need kaizen motivation
+        or psychological safety. -1 for lost labor values signals.
+
+    economic:
+      before: 5
+      after: 6
+      delta: +1
+      reason: >
+        Automation reduces labor costs, potentially enabling lower
+        prices or higher margins. The COGS structure shifts (no
+        barista labor per drink). If savings are passed to customers,
+        the economic signal strengthens. +1 for improved value
+        proposition (if price drops) or improved margin signal
+        (if price holds).
+
+    experiential:
+      before: 9
+      after: 8
+      delta: -1
+      reason: >
+        Product quality may actually INCREASE (tighter consistency).
+        But the EXPERIENCE of watching craft preparation is eliminated.
+        The multi-sensory engagement of seeing, hearing, and smelling
+        human coffee preparation is replaced by machine operation.
+        Net: better product, lesser experience. -1 for lost craft
+        performance as experiential signal.
+
+    cultural:
+      before: 6
+      after: 4
+      delta: -2
+      reason: >
+        The strongest negative impact. Third-wave coffee culture is
+        built on the barista-as-artisan identity. Removing the human
+        barista removes the cultural anchor. The chalkboard and Berlin
+        location remain, but the core cultural code (visible human
+        craft) is gone. The space risks reading as 'tech startup
+        coffee' rather than 'Berlin third-wave.' -2 for cultural
+        code violation.
+
+    social:
+      before: 6
+      after: 3
+      delta: -3
+      reason: >
+        The most severe impact. Human baristas generate social signals:
+        recognition of regulars, warmth, conversation, personality.
+        Automated preparation eliminates the primary social signal
+        source. Staff remain for greeting/ordering but the barista-
+        customer relationship (the strongest social bond) is destroyed.
+        Morning regulars lose their recognition source. -3 for
+        elimination of primary social signal source.
+
+  aggregate_impact:
+    before:
+      overall_intensity: 6.6
+      da_ratio: 0.70
+      coherence_type: signal
+    after:
+      overall_intensity: 5.6
+      da_ratio: 0.85
+      coherence_type: signal  # still signal, but weaker
+    delta:
+      overall_intensity: -1.0
+      da_ratio: +0.15
+      dimensions_improved: [economic]
+      dimensions_unchanged: [temporal]
+      dimensions_degraded: [semiotic, narrative, ideological, experiential, cultural, social]
+
+    interpretation: >
+      The executor swap trades 6 dimensions of brand perception for 1
+      dimension of economic improvement. The D/A ratio INCREASES (0.70
+      to 0.85) because human ambient signals are eliminated -- but this
+      is not an improvement. The higher D/A ratio means the brand is
+      MORE controlled but LESS rich. The eliminated ambient signals
+      (barista warmth, craft performance, cultural authenticity) were
+      POSITIVE ambient signals that enriched the brand beyond specification.
+
+      This demonstrates that the SBT Goldilocks zone for D/A ratio (55-65%)
+      exists for a reason: some ambient signals are VALUABLE. The human
+      premium is not specification failure -- it is specification surplus.
+
+# --- Convergence Insight ---
+
+convergence_insight:
+  thesis: >
+    The executor swap scenario proves the convergence: the SAME operational
+    decision (swap human for machine) is simultaneously a brand decision
+    (changes spectral profile), an operational decision (changes procedures),
+    and a perception decision (changes customer experience). There is no
+    way to evaluate this decision from only the config-org view (all tests
+    still pass) or only the SBT view (perception changes). You need BOTH
+    views to understand the full impact.
+
+  config_org_alone: >
+    Config-org says: "All quality gate tests still pass. The automated
+    system meets every process contract. The executor swap is valid."
+    This is TRUE but INCOMPLETE.
+
+  sbt_alone: >
+    SBT says: "The spectral profile degrades across 6 of 8 dimensions.
+    The brand perception weakens significantly, especially in social
+    and cultural dimensions."
+    This is TRUE but doesn't tell you WHY or HOW to fix it.
+
+  unified_view: >
+    The unified framework says: "The executor swap passes all L2 process
+    contracts but FAILS two L0 customer experience tests (L0_cul_03 and
+    parts of L0_soc_02). The decision passes the unit tests but fails
+    the acceptance tests. In TDD terms: your code compiles and unit tests
+    pass, but the acceptance tests fail. Ship or don't ship?"
+
+    This is the power of the circular architecture: config-org provides
+    the cascade structure and testable contracts; SBT provides the
+    perception model that grounds the acceptance tests. Neither alone
+    captures the full picture.
+
+# --- Three Executor Modes Comparison ---
+
+executor_mode_comparison:
+  description: >
+    Three executor signal modes and their spectral profile impact.
+
+  modes:
+    - mode: human_artisan
+      description: "Current state: skilled barista, full craft performance"
+      secondary_signals: "body language, mood, rapport, personal style, latte art"
+      signal_type: genuine_ambient
+      spectral_intensity: 6.6
+      da_ratio: 0.70
+      social_dimension: 6
+      cultural_dimension: 6
+      brand_risk: "execution variance (each barista renders differently)"
+
+    - mode: machine_transparent
+      description: "Scenario: automated system, openly robotic, no human simulation"
+      secondary_signals: "none (machine emits only designed signals)"
+      signal_type: no_ambient
+      spectral_intensity: 5.6
+      da_ratio: 0.85
+      social_dimension: 3
+      cultural_dimension: 4
+      brand_risk: "sterile, impersonal, cultural code violation"
+
+    - mode: machine_mimicking_human
+      description: "Alternative: automated system with humanoid elements (animated face, conversational AI, simulated personality)"
+      secondary_signals: "synthetic ambient (designed signals disguised as spontaneous)"
+      signal_type: synthetic_ambient
+      spectral_intensity: 5.0  # LOWER than transparent machine
+      da_ratio: 0.95  # almost entirely designed
+      social_dimension: 2  # uncanny valley REDUCES social perception
+      cultural_dimension: 3
+      brand_risk: >
+        UNCANNY VALLEY. Simulated warmth is perceived as inauthentic.
+        The machine-mimicking-human mode is WORSE than the transparent
+        machine because it adds a perceived deception signal. Customers
+        can detect synthetic sociality and it triggers distrust.
+        This is SBT's structural_absence concept applied to social
+        signals: the conspicuous absence of genuine human warmth is
+        MORE damaging when the system pretends to provide it.
+
+  recommendation: >
+    If automation is necessary, choose machine_transparent over
+    machine_mimicking_human. Honest automation preserves trust.
+    Simulated humanity destroys it. The best executor swap strategy:
+    automate BACKSTAGE processes (quality-control logging, inventory,
+    equipment maintenance) where there is zero brand-perception cost,
+    and keep human executors for CUSTOMER-FACING processes where
+    social and cultural dimensions matter.

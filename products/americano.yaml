@@ -1,0 +1,143 @@
+version: 1.0.0
+id: americano
+name: Americano
+category: hot_beverage
+available: true
+
+description: >
+  House espresso lengthened with hot water. Hot water poured first, espresso
+  floated on top to preserve the crema layer. Clean, bright, and full-bodied
+  with the same Ethiopia Yirgacheffe character as our straight espresso.
+
+preparation:
+  method: espresso_and_hot_water
+  equipment:
+    - espresso_machine
+  steps:
+    - action: heat_water
+      temperature_c: 87.5
+      tolerance_c: 2.5
+      volume_ml: 200
+      note: slightly below boiling to preserve crema
+    - action: pull_espresso
+      reference: products/espresso.yaml
+      dose_g: 18.0
+      yield_ml: 36
+    - action: combine
+      sequence:
+        - pour_hot_water_into_cup
+        - float_espresso_on_top
+      note: water first, then espresso — preserves crema layer
+    - action: serve
+      vessel: ceramic_mug
+      vessel_volume_ml: 240
+      alternative_vessel: paper_cup
+      alternative_vessel_volume_ml: 240
+
+ingredients:
+  - id: espresso
+    reference: products/espresso.yaml
+    quantity_per_serving_ml: 36
+    cost_per_serving: 0.42
+
+  - id: water
+    type: filtered
+    tds_ppm: 100-150
+    temperature_c: 87.5
+    quantity_per_serving_ml: 200
+    cost_per_serving: 0.01
+
+nutrition:
+  # Computed per serving (236ml = 36ml espresso + 200ml water)
+  # Same caffeine as espresso — no additional extraction from hot water
+  serving_size_ml: 236
+  energy_kcal: 2
+  fat_g: 0.0
+  saturated_fat_g: 0.0
+  carbohydrates_g: 0.3
+  sugars_g: 0.0
+  fiber_g: 0.0
+  protein_g: 0.3
+  salt_g: 0.0
+  caffeine_mg: 63
+
+allergens:
+  declared: []
+  cross_contamination:
+    - allergen: milk
+      source: shared_steam_wand
+      risk: low
+      mitigation: purge_wand_between_uses
+    - allergen: tree_nuts
+      source: shared_grinder_for_flavored_beans
+      risk: negligible
+      mitigation: dedicated_grinder_for_unflavored
+
+cost:
+  ingredients:
+    espresso: 0.42
+    water: 0.01
+  consumables:
+    cup: 0.00  # ceramic mug, in-house
+  total_cogs: 0.43
+  currency: USD
+  notes:
+    takeaway_cup_cost: 0.12
+    takeaway_total_cogs: 0.55
+
+pricing:
+  price: 3.50
+  currency: USD
+  margin_pct: 87.7
+  notes:
+    takeaway_margin_pct: 84.3
+
+modifiers:
+  - id: double
+    description: Double shot (adds second 18g extraction, 72ml total espresso + 200ml water)
+    price_adjustment: 1.50
+    nutrition_adjustment:
+      energy_kcal: 2
+      carbohydrates_g: 0.3
+      protein_g: 0.3
+      caffeine_mg: 63
+    cogs_adjustment: 0.42
+
+  - id: iced
+    description: Iced americano (cold water + ice cubes instead of hot water)
+    price_adjustment: 0.00
+    preparation_override:
+      water_temperature_c: 4.0
+      add_ingredient: ice_cubes
+      sequence:
+        - fill_cup_with_ice
+        - pour_cold_water
+        - float_espresso_on_top
+    ingredient_add:
+      id: ice_cubes
+      type: frozen_water
+      quantity_per_serving_g: 100
+      cost_per_serving: 0.02
+
+  - id: add_oat_milk
+    description: Add splash of Oatly Barista oat milk (30ml)
+    price_adjustment: 0.50
+    ingredient_add:
+      id: oat_milk
+      reference: products/oat_latte.yaml#ingredients.oat_milk
+      quantity_ml: 30
+    nutrition_adjustment:
+      # Oatly Barista per 100ml: 59 kcal, 2.8g fat, 0.3g sat fat,
+      # 6.7g carbs, 4.1g sugars, 0.8g fiber, 0.6g protein, 0.10g salt
+      # 30ml = x0.3:
+      energy_kcal: 18
+      fat_g: 0.8
+      saturated_fat_g: 0.1
+      carbohydrates_g: 2.0
+      sugars_g: 1.2
+      fiber_g: 0.2
+      protein_g: 0.2
+      salt_g: 0.03
+    cogs_adjustment: 0.12  # 30ml at $4.00/L
+    allergen_change:
+      adds: [oats]

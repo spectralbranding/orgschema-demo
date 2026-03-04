@@ -1,0 +1,22 @@
+name: "Spectra Coffee"
+type: coffee_shop
+mission: "Serve excellent coffee with full transparency"
+values:
+  - quality
+  - transparency
+  - sustainability
+version: 1.0.0
+founded: 2024
+
+locations:
+  - id: flagship
+    address: "42 Roast Lane, Berlin, DE"
+    timezone: Europe/Berlin
+    hours:
+      weekday: "07:00-20:00"
+      weekend: "08:00-18:00"
+
+roles:
+  - barista
+  - shift_lead
+  - manager

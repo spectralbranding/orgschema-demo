@@ -1,0 +1,121 @@
+version: 1.0.0
+id: espresso
+name: Espresso
+category: hot_beverage
+available: true
+
+description: >
+  Single-origin Ethiopia Yirgacheffe, medium roast. Bright citrus acidity
+  with floral notes and a clean, sweet finish. Standard double-basket dose
+  (18g) used as the base for all espresso drinks.
+
+preparation:
+  method: espresso_extraction
+  equipment:
+    - espresso_machine
+  steps:
+    - action: grind
+      setting: fine
+      particle_size_um: 200-300
+    - action: dose
+      mass_g: 18.0
+      tolerance_g: 0.3
+    - action: distribute_and_tamp
+      tamp_pressure_kg: 14-16
+    - action: extract
+      temperature_c: 93.0
+      tolerance_c: 1.0
+      pressure_bar: 9.0
+      tolerance_bar: 0.5
+      target_yield_ml: 36
+      tolerance_ml: 2
+      target_time_s: 28
+      acceptable_range_s: [26, 30]
+    - action: serve
+      vessel: demitasse
+      vessel_volume_ml: 90
+
+ingredients:
+  - id: coffee_beans
+    name: Ethiopia Yirgacheffe
+    type: arabica
+    origin: Yirgacheffe, Ethiopia
+    altitude_m: 1750-2200
+    processing: washed
+    roast_level: medium
+    roast_temperature_c: 210-220
+    supplier:
+      name: Nordic Roasters GmbH
+      origin_certification: direct_trade
+    quantity_per_serving_g: 18.0
+    cost_per_kg: 23.00
+    cost_per_serving: 0.41
+
+  - id: water
+    type: filtered
+    tds_ppm: 100-150  # SCA recommendation: 75-250, target 150
+    temperature_c: 93.0
+    quantity_per_serving_ml: 36
+    cost_per_serving: 0.01
+
+nutrition:
+  # Computed per serving (36ml espresso from 18g dose)
+  serving_size_ml: 36
+  energy_kcal: 2
+  fat_g: 0.0
+  saturated_fat_g: 0.0
+  carbohydrates_g: 0.3
+  sugars_g: 0.0
+  fiber_g: 0.0
+  protein_g: 0.3
+  salt_g: 0.0
+  caffeine_mg: 63
+
+allergens:
+  declared: []
+  cross_contamination:
+    - allergen: milk
+      source: shared_steam_wand
+      risk: low
+      mitigation: purge_wand_between_uses
+    - allergen: tree_nuts
+      source: shared_grinder_for_flavored_beans
+      risk: negligible
+      mitigation: dedicated_grinder_for_unflavored
+
+cost:
+  ingredients:
+    coffee_beans: 0.41
+    water: 0.01
+  consumables:
+    cup: 0.00  # served in house demitasse
+  total_cogs: 0.42
+  currency: USD
+
+pricing:
+  price: 3.50
+  currency: USD
+  margin_pct: 88.0
+
+modifiers:
+  - id: triple
+    description: Triple shot (adds second 18g extraction to the standard double)
+    price_adjustment: 1.50
+    nutrition_adjustment:
+      energy_kcal: 2
+      caffeine_mg: 63
+    cogs_adjustment: 0.42
+  - id: ristretto
+    description: Shorter extraction (18g in, 22ml out, 20-25s)
+    price_adjustment: 0.00
+    preparation_override:
+      target_yield_ml: 22
+      target_time_s: 22
+      acceptable_range_s: [20, 25]
+  - id: lungo
+    description: Longer extraction (18g in, 54ml out, 35-40s)
+    price_adjustment: 0.00
+    preparation_override:
+      target_yield_ml: 54
+      target_time_s: 37
+      acceptable_range_s: [35, 40]

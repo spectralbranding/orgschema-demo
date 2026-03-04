@@ -1,0 +1,225 @@
+version: 1.0.0
+
+description: >
+  Maps configuration parameters to Spectral Brand Theory dimensions.
+  Each mapping identifies a config value that emits a brand signal,
+  the SBT dimension it activates, and whether the emission is
+  designed (intentional) or ambient (emergent from operations).
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+
+mappings:
+
+  # --- Semiotic Dimension ---
+  # Signs, symbols, visual codes that encode meaning
+
+  - id: sig_01
+    source: brand/identity.yaml:visual.colors.primary
+    dimension: semiotic
+    emission_type: designed
+    signal: >
+      Espresso brown (#2D1B0E) as primary color encodes craft authenticity
+      and raw-material identity. The color IS the product.
+
+  - id: sig_02
+    source: brand/identity.yaml:visual.logo.variants
+    dimension: semiotic
+    emission_type: designed
+    signal: >
+      Three logo variants (full, mark, wordmark) with spectral prism icon
+      encode the brand's analytical identity — coffee as a spectrum of
+      variables, not a commodity.
+
+  # --- Narrative Dimension ---
+  # Stories, origin myths, founding narratives
+
+  - id: sig_03
+    source: products/espresso.yaml:ingredients.coffee_beans.origin
+    dimension: narrative
+    emission_type: designed
+    signal: >
+      Ethiopia Yirgacheffe single-origin with altitude (1750-2200m) and
+      processing method (washed) tells a terroir story. Each parameter
+      is a narrative anchor.
+
+  - id: sig_04
+    source: products/espresso.yaml:ingredients.coffee_beans.supplier.origin_certification
+    dimension: narrative
+    emission_type: designed
+    signal: >
+      Direct trade certification narrates a relationship story —
+      the supply chain as a character in the brand narrative, not
+      an invisible backstage process.
+
+  # --- Temporal Dimension ---
+  # Time-related signals: heritage, seasonality, rhythm
+
+  - id: sig_05
+    source: brand/identity.yaml:environment.music.schedule
+    dimension: temporal
+    emission_type: designed
+    signal: >
+      Three-phase music schedule (jazz morning, lo-fi afternoon,
+      acoustic evening) creates temporal rhythm. The space itself
+      marks time, training regulars to associate moods with hours.
+
+  - id: sig_06
+    source: brand/identity.yaml:environment.lighting.brightness_schedule
+    dimension: temporal
+    emission_type: ambient
+    signal: >
+      Brightness ramping from 60% at open to 100% midday and back to
+      50% by close creates a circadian signal. Ambient because customers
+      feel it without consciously registering the schedule.
+
+  # --- Ideological Dimension ---
+  # Values, beliefs, worldview expressed through operations
+
+  - id: sig_07
+    source: organization.yaml:values
+    dimension: ideological
+    emission_type: designed
+    signal: >
+      Explicit values [quality, transparency, sustainability] declared
+      at organizational root. These are testable claims — every other
+      config file either supports or contradicts them.
+
+  - id: sig_08
+    source: products/croissant.yaml:storage.display.discard_policy
+    dimension: ideological
+    emission_type: ambient
+    signal: >
+      8-hour display maximum with mandatory discard policy is an
+      ideological signal: quality over waste economics. The config
+      encodes a value judgment about acceptable freshness.
+
+  # --- Economic Dimension ---
+  # Pricing, value perception, cost transparency
+
+  - id: sig_09
+    source: products/oat_latte.yaml:cost
+    dimension: economic
+    emission_type: designed
+    signal: >
+      Itemized COGS breakdown (espresso $0.42 + oat milk $0.96 +
+      vanilla $0.08 + cup $0.15 = $1.61) against $5.50 price reveals
+      70.7% margin. In a transparency-first brand, this data could be
+      customer-facing.
+
+  - id: sig_10
+    source: products/oat_latte.yaml:modifiers.regular_milk.price_adjustment
+    dimension: economic
+    emission_type: designed
+    signal: >
+      Plant milk is default; dairy is the -$0.50 modifier. This inverts
+      the industry convention where plant milk costs extra. The pricing
+      structure itself is an economic signal about which option is
+      "normal" vs. "alternative."
+
+  # --- Experiential Dimension ---
+  # Sensory encounters, physical environment, service feel
+
+  - id: sig_11
+    source: brand/identity.yaml:environment.temperature
+    dimension: experiential
+    emission_type: ambient
+    signal: >
+      21C target with 1C tolerance and contextual override (20C when
+      outside >30C) is invisible infrastructure. Customers never see
+      the config but feel the result as comfort. Pure ambient emission.
+
+  - id: sig_12
+    source: products/cappuccino.yaml:preparation.steps[1].foam_depth_mm
+    dimension: experiential
+    emission_type: designed
+    signal: >
+      Foam depth spec of 12-18mm defines the tactile and visual
+      experience. The millimeter precision is a designed signal of
+      craft — even if customers never know the number, they experience
+      the consistency.
+
+  # --- Cultural Dimension ---
+  # Cultural codes, rituals, community belonging
+
+  - id: sig_13
+    source: organization.yaml:locations.flagship.address
+    dimension: cultural
+    emission_type: ambient
+    signal: >
+      Berlin location activates European specialty coffee culture codes.
+      The city itself is a cultural signal — third-wave coffee capital,
+      design-forward, sustainability-conscious.
+
+  - id: sig_14
+    source: brand/identity.yaml:environment.signage.a_frame.content_rotation
+    dimension: cultural
+    emission_type: designed
+    signal: >
+      Daily chalkboard rotation signals a living, human-curated space.
+      The handwritten format is a deliberate cultural code: artisanal,
+      local, anti-corporate.
+
+  # --- Social Dimension ---
+  # Community, belonging, social identity, shared rituals
+
+  - id: sig_15
+    source: compliance/allergen_management.yaml:customer_communication
+    dimension: social
+    emission_type: designed
+    signal: >
+      Proactive allergen communication (ask-first protocol, visible
+      allergen matrix) signals inclusive hospitality. The social message:
+      everyone belongs here, dietary restrictions are anticipated
+      rather than accommodated as exceptions.
+
+  - id: sig_16
+    source: signals/observer-profiles.yaml:morning_regular
+    dimension: social
+    emission_type: ambient
+    signal: >
+      The existence of a "morning regular" observer profile implies
+      the brand recognizes and values habitual relationships. Regulars
+      are a named category, not an anonymous transaction pattern.
+
+  # --- Internal Communications Signals ---
+  # Processes that are invisible to customers but leak through staff behavior
+
+  - id: sig_17
+    source: processes/internal_communications.yaml:tone.principles
+    dimension: ideological
+    emission_type: ambient
+    signal: >
+      Five internal tone principles (direct, specific, blameless, kind,
+      curious) are operational values that customers never read but always
+      experience. When a barista says "the grinder is miscalibrated" instead
+      of hedging, and the shift lead responds without defensiveness, the
+      customer witnesses a culture of competence and psychological safety.
+      Internal communication norms are ideological signals that leak through
+      every staff interaction a customer overhears.
+
+  - id: sig_18
+    source: processes/internal_communications.yaml:andon.no_blame_policy
+    dimension: cultural
+    emission_type: ambient
+    signal: >
+      A no-blame reporting culture — where any staff member can halt
+      operations for safety without permission — is a cultural signal that
+      encodes the organization's relationship to authority and error. Customers
+      cannot see the andon policy, but they experience its downstream effects:
+      a team that catches problems before they become customer-facing, staff
+      who speak up rather than cover up, and an environment where quality
+      failures are rare because reporting is safe.
+
+  - id: sig_19
+    source: processes/internal_communications.yaml:kaizen.recognition.rationale
+    dimension: economic
+    emission_type: ambient
+    signal: >
+      The explicit refusal of financial incentives for improvement ideas —
+      "recognition, not money" — is an economic signal about how the
+      organization values labor. It encodes a belief that intrinsic
+      motivation produces better outcomes than bounty systems. This leaks
+      into the customer experience through staff who suggest improvements
+      because they care about the work, not because they are gaming a
+      reward structure. The absence of a price on ideas is itself a
+      price signal.

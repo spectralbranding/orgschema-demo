@@ -1,0 +1,181 @@
+version: 1.0.0
+
+description: >
+  Regulatory classification thresholds for food labeling.
+  Maps quantitative nutritional values to regulatory categories
+  across jurisdictions. Used by the compliance layer to auto-classify
+  products and generate jurisdiction-appropriate labels.
+
+fat:
+  # Per 100ml for beverages, per 100g for solids
+  eu_regulation_1924_2006:
+    fat_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+      label: "fat-free"
+    low_fat:
+      max_g_per_100ml: 1.5
+      max_g_per_100g: 3.0
+      label: "low fat"
+    # No upper bound defined; above low_fat = standard (no claim permitted)
+
+  us_fda_21cfr101:
+    fat_free:
+      max_g_per_serving: 0.5
+      label: "fat free"
+    low_fat:
+      max_g_per_serving: 3.0
+      label: "low fat"
+    reduced_fat:
+      reduction_pct_vs_reference: 25
+      label: "reduced fat"
+
+  uk_food_standards:
+    # Follows retained EU regulation post-Brexit, same thresholds
+    fat_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+      label: "fat-free"
+    low_fat:
+      max_g_per_100ml: 1.5
+      max_g_per_100g: 3.0
+      label: "low fat"
+
+  codex_alimentarius:
+    fat_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+    low_fat:
+      max_g_per_100ml: 1.5
+      max_g_per_100g: 3.0
+
+sugar:
+  # Per 100ml for beverages, per 100g for solids
+  eu_regulation_1924_2006:
+    sugar_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+      label: "sugar-free"
+    low_sugar:
+      max_g_per_100ml: 2.5
+      max_g_per_100g: 5.0
+      label: "low sugars"
+    no_added_sugars:
+      condition: no_mono_or_disaccharides_added
+      label: "no added sugars"
+
+  us_fda_21cfr101:
+    sugar_free:
+      max_g_per_serving: 0.5
+      label: "sugar free"
+    no_added_sugars:
+      condition: no_sugars_added_during_processing
+      label: "no added sugars"
+    reduced_sugar:
+      reduction_pct_vs_reference: 25
+      label: "reduced sugar"
+
+  uk_food_standards:
+    sugar_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+      label: "sugar-free"
+    low_sugar:
+      max_g_per_100ml: 2.5
+      max_g_per_100g: 5.0
+      label: "low sugars"
+
+  codex_alimentarius:
+    sugar_free:
+      max_g_per_100ml: 0.5
+      max_g_per_100g: 0.5
+    low_sugar:
+      max_g_per_100ml: 2.5
+      max_g_per_100g: 5.0
+
+caffeine:
+  eu_regulation_1169_2011:
+    high_caffeine:
+      threshold_mg_per_100ml: 15
+      label: "'High caffeine content' — required on label"
+      additional: "Not recommended for children, pregnant or breast-feeding women"
+    exempt: tea, coffee  # exempt from high-caffeine labeling when sold as such
+
+  us_fda:
+    gras_limit_mg_per_day: 400
+    labeling: voluntary  # no mandatory caffeine labeling for coffee
+    energy_drinks:
+      required_disclosure: true
+      max_mg_per_serving: 200  # FDA guidance, not formal limit
+
+  uk_food_standards:
+    high_caffeine:
+      threshold_mg_per_100ml: 15
+      label: "'High caffeine content'"
+    exempt: tea, coffee
+
+  codex_alimentarius:
+    # No global caffeine threshold; defers to national regulations
+    guidance: refer_to_national_authority
+
+alcohol:
+  eu_regulation_1169_2011:
+    alcohol_free:
+      max_abv_pct: 0.5
+      label: "alcohol-free"
+    low_alcohol:
+      max_abv_pct: 1.2
+      label: "low alcohol"
+    standard:
+      min_abv_pct: 1.2
+      labeling_required: true
+      format: "X.X% vol"
+
+  us_ttb:
+    non_alcoholic:
+      max_abv_pct: 0.5
+      label: "non-alcoholic"
+    beer_threshold:
+      min_abv_pct: 0.5
+      requires: TTB_approval
+    # Coffee cocktails containing spirits require TTB licensing
+
+  uk_food_standards:
+    alcohol_free:
+      max_abv_pct: 0.05
+    low_alcohol:
+      max_abv_pct: 1.2
+    de_alcoholised:
+      max_abv_pct: 0.5
+
+  codex_alimentarius:
+    # Defers to national regulations for alcohol
+    guidance: refer_to_national_authority
+
+examples:
+  espresso:
+    fat_classification:
+      eu: fat_free    # 0g fat per 36ml serving
+      us: fat_free    # 0g per serving < 0.5g
+    sugar_classification:
+      eu: sugar_free  # 0g sugars per 100ml
+      us: sugar_free  # 0g per serving < 0.5g
+    caffeine_classification:
+      eu: high_caffeine  # 63mg / 36ml = 175mg per 100ml > 15mg threshold
+      note: exempt as served coffee
+
+  oat_latte:
+    fat_classification:
+      eu: standard    # 6.7g fat / 286ml = 2.3g per 100ml > 1.5g
+      us: standard    # 6.7g per serving > 3g
+    sugar_classification:
+      eu: standard    # 18.3g sugars / 286ml = 6.4g per 100ml > 2.5g
+      us: standard    # 18.3g per serving > 0.5g
+
+  croissant:
+    fat_classification:
+      eu: standard    # 15g fat / 70g = 21.4g per 100g > 3g
+      us: standard    # 15g per serving > 3g
+    sugar_classification:
+      eu: standard    # 5g sugars / 70g = 7.1g per 100g > 5g threshold — not low-sugar
+      us: standard    # 5g per serving > 0.5g sugar-free threshold

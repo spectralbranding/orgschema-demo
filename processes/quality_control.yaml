@@ -1,0 +1,292 @@
+version: 1.0.0
+
+description: >
+  Quality control processes for Spectra Coffee. Defines grinder calibration
+  (the daily "dial-in"), shot quality standards, drink verification, and
+  team taste calibration. Grinder calibration is the single highest-impact
+  quality process in any espresso operation — it translates product specs
+  into actual cup quality every morning.
+
+standards_reference:
+  - standard: ISO 9001:2015
+    clause: "8.6 — Release of products and services"
+    requirement: >
+      The organization shall implement planned arrangements to verify that
+      product and service requirements have been met. Products shall not be
+      released until planned arrangements have been satisfactorily completed.
+  - standard: SCA (Specialty Coffee Association)
+    reference: Espresso extraction standards
+    requirement: >
+      Espresso should be extracted within defined dose, yield, time, and
+      temperature parameters and evaluated by taste for sweetness, acidity,
+      and balance.
+
+# ---------------------------------------------------------------------------
+# Daily grinder calibration (the "dial-in")
+# ---------------------------------------------------------------------------
+daily_calibration:
+  description: >
+    The most important quality task of the day. Grind setting must be
+    recalibrated every morning because coffee degasses overnight, ambient
+    humidity changes, and burr temperature differs from the previous day's
+    operating state. Yesterday's setting is never correct today.
+
+  when: every_morning_after_machine_warmup_before_opening
+  who: shift_lead  # or designated senior barista
+  duration_min: 5-10
+  preconditions:
+    - espresso_machine_at_operating_temperature
+    - fresh_beans_in_hopper  # not overnight-stale beans sitting in hopper
+
+  procedure:
+    - step: 1
+      action: purge_stale_grounds
+      details: >
+        Run grinder for 2-3s to purge any grounds retained overnight.
+        Discard purged grounds.
+
+    - step: 2
+      action: pull_test_shot
+      details: >
+        Dose 18.0g (per products/espresso.yaml:preparation.steps[1].mass_g),
+        distribute evenly, tamp level, extract into cup on scale.
+      parameters:
+        dose_g: 18.0
+        tolerance_g: 0.3
+        target_yield_ml: 36
+        tolerance_ml: 2
+        target_time_s: 28
+        acceptable_range_s: [26, 30]
+        temperature_c: 93.0
+      reference: products/espresso.yaml:preparation.steps
+
+    - step: 3
+      action: evaluate_and_adjust
+      details: >
+        Check extraction time. If outside 26-30s window, adjust grind:
+        - Shot too fast (<26s): grind finer (smaller number / tighter)
+        - Shot too slow (>30s): grind coarser (larger number / looser)
+        Adjust in small increments. Pull another test shot. Repeat until
+        extraction time is within range.
+      max_test_shots: 5  # if not dialed in after 5, check for equipment issues
+
+    - step: 4
+      action: taste_assessment
+      details: >
+        Taste the shot that hit target parameters. Extraction time within
+        range is necessary but not sufficient — the shot must taste right.
+      flavor_targets:
+        - quality: sweetness
+          description: "Dominant flavor. Should be pleasant, not cloying."
+        - quality: acidity
+          description: "Bright, clean, fruit-like. Should balance sweetness."
+        - quality: finish
+          description: "Clean and lingering. No harsh bitterness or drying astringency."
+      diagnosis:
+        bitter_or_harsh: "Over-extracted. Grind slightly coarser or reduce yield."
+        sour_or_sharp: "Under-extracted. Grind slightly finer or extend time."
+        flat_or_muted: "Check bean freshness (roast date). Consider dose increase."
+        astringent_or_drying: "Channeling likely. Check distribution and tamp technique."
+
+    - step: 5
+      action: record
+      details: >
+        Log the following on the daily calibration card:
+      fields:
+        - grinder_setting: numeric or marked position
+        - shot_time_s: actual extraction time of approved shot
+        - yield_ml: actual yield
+        - taster: initials of person who approved
+        - timestamp: time of calibration completion
+        - notes: any observations (new bag, humidity, etc.)
+
+  recalibration_triggers:
+    - trigger: new_bag_of_beans
+      reason: >
+        Every bag has slightly different density, moisture, and degassing
+        state. Re-calibrate immediately when opening a new bag, even
+        mid-shift.
+    - trigger: humidity_change_pct_gt_20
+      reason: >
+        Coffee is hygroscopic. Significant humidity changes alter grind
+        behavior. Monitor on rainy days or when weather shifts sharply.
+    - trigger: temperature_change_c_gt_10
+      reason: >
+        Ambient temperature affects bean brittleness and grinder burr
+        expansion. Re-calibrate after significant temperature swings.
+    - trigger: extraction_time_drift_s_gt_3
+      reason: >
+        If shots start drifting >3s from the morning calibration during
+        service, the grind has shifted. Re-calibrate between customers.
+    - trigger: after_grinder_cleaning
+      reason: >
+        Reassembly and burr seating may differ slightly. Always
+        recalibrate after weekly burr cleaning.
+      reference: processes/equipment_maintenance.yaml:weekly.grinder
+
+  cross_reference: processes/opening_closing.yaml:opening.steps.open_03
+
+# ---------------------------------------------------------------------------
+# Shot quality standards
+# ---------------------------------------------------------------------------
+shot_quality:
+  description: >
+    Standards for evaluating every espresso shot before it enters a drink.
+    Every barista is responsible for assessing their own shots. A bad shot
+    should never leave the bar.
+
+  visual_standards:
+    crema:
+      color: golden_brown
+      texture: thick_and_persistent
+      coverage: full_surface
+      acceptable_variations:
+        - tiger_striping  # darker streaks in lighter crema — normal for fresh coffee
+      duration_s: 60  # crema should persist at least 60s on a properly extracted shot
+
+  discard_criteria:
+    # Any of these = discard the shot, repull, no exceptions
+    - id: discard_01
+      condition: blonde_or_thin_crema
+      diagnosis: under-extraction
+      action: grind_finer_or_increase_dose
+    - id: discard_02
+      condition: very_dark_or_oily_surface_no_crema
+      diagnosis: over-extraction
+      action: grind_coarser_or_decrease_yield
+    - id: discard_03
+      condition: channeling_visible
+      description: >
+        Uneven flow from portafilter — some areas extract fast while
+        others are dry. Indicates poor distribution or cracked puck.
+      action: redistribute_and_retamp
+    - id: discard_04
+      condition: extraction_time_outside_window
+      acceptable_range_s: [22, 35]
+      description: >
+        Wider than calibration window (26-30s) to allow for ristretto
+        and lungo modifiers. Anything outside 22-35s is always wrong.
+      action: adjust_grind_and_repull
+      reference: products/espresso.yaml:preparation.steps[3].acceptable_range_s
+
+  waste_shot_policy:
+    customer_impact: none  # customer is never served a substandard shot
+    charge: no_charge_for_repull  # cost of waste is a quality investment
+    logging: >
+      Record discarded shots with reason in waste log. Track daily count.
+      If waste exceeds 10% of total shots pulled, investigate root cause
+      (grinder drift, bean quality, training gap).
+    reference: processes/internal_communications.yaml:nonconformance
+
+# ---------------------------------------------------------------------------
+# Drink quality verification
+# ---------------------------------------------------------------------------
+drink_verification:
+  description: >
+    Ongoing quality checks during service to catch drift and maintain
+    consistency across all baristas and all shifts.
+
+  spot_checks:
+    who: shift_lead
+    frequency: 1_per_hour_during_peak
+    method: >
+      Shift lead tastes one completed drink per hour during peak service.
+      Select randomly — do not always check the same barista. Evaluate
+      against product spec for that drink.
+    record: note_in_shift_log_if_issue_found
+    reference: processes/internal_communications.yaml:gemba
+
+  customer_remake_policy:
+    trigger: any_customer_complaint_about_taste_or_temperature
+    response: >
+      Remake the drink immediately. No questions, no interrogation, no
+      skepticism. The customer's experience is the only quality metric
+      that matters at the moment of service.
+    charge: no_charge_for_remake
+    logging: >
+      Record the remake with drink type, complaint description, and
+      barista. Track for patterns — if one drink type or one barista
+      generates repeated remakes, investigate.
+    escalation: >
+      If the same complaint occurs 3+ times in a week for the same
+      drink, raise as a nonconformance report.
+    reference: processes/internal_communications.yaml:nonconformance
+
+  milk_temperature:
+    method: spot_check_with_probe_thermometer
+    frequency: shift_lead_discretion  # at minimum once per shift
+    targets:
+      - milk_type: cow_milk
+        target_c: 65
+        acceptable_range_c: [63, 67]
+        note: >
+          Above 67C denatures whey proteins, destroying microfoam and
+          producing a flat, scalded taste. Below 63C tastes lukewarm.
+      - milk_type: oat_milk
+        target_c: 65
+        acceptable_range_c: [63, 67]
+        note: >
+          Oat milk scorches easily above 67C. Produces grainy texture
+          and bitter taste. Steam more gently than cow's milk.
+    reference: products/oat_latte.yaml
+    cross_reference: products/cappuccino.yaml
+
+# ---------------------------------------------------------------------------
+# Taste calibration sessions
+# ---------------------------------------------------------------------------
+taste_calibration:
+  description: >
+    Regular team tasting sessions to align everyone's palate and maintain
+    a shared quality vocabulary. Without calibration, "good espresso" means
+    something different to each barista, and quality becomes subjective
+    and inconsistent.
+
+  frequency: monthly
+  duration_min: 30
+  who: all_baristas_and_shift_leads
+  facilitator: manager_or_senior_shift_lead
+
+  format:
+    - step: 1
+      action: blind_tasting
+      details: >
+        All participants taste the same espresso (2-3 shots pulled by
+        facilitator). No talking until everyone has tasted.
+    - step: 2
+      action: individual_notes
+      details: >
+        Each participant writes down flavor descriptors independently.
+        Use SCA flavor wheel categories if helpful, but plain language
+        is fine. The goal is honest observation, not jargon.
+    - step: 3
+      action: group_discussion
+      details: >
+        Compare notes. Discuss differences in perception. There are no
+        wrong answers at this stage — the point is to identify where
+        the team's palates diverge.
+    - step: 4
+      action: reference_alignment
+      details: >
+        Facilitator describes the target flavor profile for the current
+        bean (per products/espresso.yaml:description) and discusses how
+        each person's notes map to or differ from the target.
+    - step: 5
+      action: defect_identification
+      details: >
+        Facilitator prepares 1-2 deliberately flawed shots (one
+        under-extracted, one over-extracted). Team tastes and identifies
+        the defect. This trains recognition of what to reject during
+        service.
+
+  record:
+    type: training_log
+    content:
+      - date
+      - participants
+      - flavor_notes_summary
+      - defects_identified_correctly_pct
+      - action_items  # e.g., "team tends to miss sourness — focus next session"
+    retention: 1_year
+
+  reference: products/espresso.yaml:description
+  cross_reference: processes/internal_communications.yaml:kaizen

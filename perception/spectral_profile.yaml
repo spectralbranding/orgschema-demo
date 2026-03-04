@@ -1,0 +1,225 @@
+version: 1.0.0
+
+description: >
+  SBT spectral profile analysis of Spectra Coffee. Treats Spectra Coffee
+  as a brand case study (like Patagonia, Tesla, IKEA, Hermes, Erewhon)
+  and scores it across 8 spectral dimensions.
+
+  This is the PREDICTED profile derived from the operational specification
+  (config-org demo files). In a real business, this would be validated
+  against actual customer perception data.
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+methodology: >
+  Profile derived from specification analysis (config-org demo, 17 YAML files)
+  rather than from observer research. This is the EMISSION-SIDE profile --
+  what the specification architecture is designed to produce. The PERCEPTION-SIDE
+  profile would come from customer research (SBT observer analysis).
+
+# --- Brand Identity ---
+
+brand:
+  name: Spectra Coffee
+  category: specialty_coffee_shop
+  market: Berlin, Germany
+  founded: 2024
+  scale: single_location
+
+# --- Spectral Profile (8 Dimensions) ---
+# Scale: 1-10 (1 = minimal signal strength, 10 = dominant)
+# Each dimension scored from the SPECIFICATION, not from observation.
+
+spectral_profile:
+
+  semiotic:
+    score: 7
+    strength: strong
+    signal_sources:
+      - "brand/identity.yaml: espresso brown primary color (material-honest)"
+      - "brand/identity.yaml: spectral prism logomark (analytical identity)"
+      - "brand/identity.yaml: Space Grotesk + JetBrains Mono (precision/technical codes)"
+      - "packaging: sage green accent stripe on cups (sustainability marker)"
+    designed_signals: 4
+    ambient_signals: 0
+    assessment: >
+      Strong semiotic system that codes for craft-analytical identity.
+      All visual signals are designed -- no ambient visual noise. The color
+      palette derives from raw materials (coffee, milk, plant) rather than
+      arbitrary brand colors. The monospace font for prices/data is a
+      distinctive semiotic choice that signals measurement culture.
+
+  narrative:
+    score: 6
+    strength: moderate
+    signal_sources:
+      - "products/espresso.yaml: Ethiopia Yirgacheffe origin story (altitude, processing, terroir)"
+      - "products/espresso.yaml: Nordic Roasters GmbH supplier with direct trade cert"
+      - "organization.yaml: mission statement ('Serve excellent coffee with full transparency')"
+    designed_signals: 3
+    ambient_signals: 0
+    assessment: >
+      Moderate narrative dimension. Origin story is present but limited to
+      a single origin (Ethiopia Yirgacheffe). The supply chain narrative
+      (direct trade, named roaster) is strong but not prominently foregrounded.
+      Opportunity: seasonal rotating origins would deepen the narrative dimension.
+
+  temporal:
+    score: 7
+    strength: strong
+    signal_sources:
+      - "brand/identity.yaml: 3-phase music schedule (jazz/lo-fi/acoustic)"
+      - "brand/identity.yaml: brightness schedule (60% dawn to 50% evening)"
+      - "products/croissant.yaml: 8-hour freshness window with discard policy"
+      - "processes/opening_closing.yaml: opening/closing rituals"
+    designed_signals: 2
+    ambient_signals: 2
+    assessment: >
+      Strong temporal dimension. The music and lighting schedules create a
+      perceptible daily rhythm. The croissant discard policy is an ambient
+      temporal signal (customers notice fresh croissants in the morning and
+      their absence in the evening). The opening/closing procedures create
+      ritual bookends. For a business founded in 2024, temporal depth comes
+      from daily rhythm rather than heritage.
+
+  ideological:
+    score: 7
+    strength: strong
+    signal_sources:
+      - "organization.yaml: values [quality, transparency, sustainability]"
+      - "products/oat_latte.yaml: plant milk as default (dairy as modifier)"
+      - "products/croissant.yaml: discard policy (quality > waste economics)"
+      - "processes/internal_communications.yaml: no-blame andon policy"
+      - "processes/internal_communications.yaml: kaizen recognition (not financial incentives)"
+    designed_signals: 3
+    ambient_signals: 2
+    assessment: >
+      Strong ideological dimension. Values are encoded in operational decisions
+      rather than declared through messaging. The plant-milk-as-default pricing
+      inversion is the most visible ideological signal. The discard policy
+      demonstrates quality commitment at economic cost. Internal values (andon,
+      kaizen) leak through as ambient signals in staff behavior.
+
+  economic:
+    score: 5
+    strength: moderate
+    signal_sources:
+      - "products/*.yaml: premium pricing (espresso 3.50, oat latte 5.50)"
+      - "products/oat_latte.yaml: inverted pricing structure (plant default)"
+      - "products/oat_latte.yaml: detailed COGS breakdown (transparency-ready)"
+    designed_signals: 2
+    ambient_signals: 1
+    assessment: >
+      Moderate economic dimension. Pricing is premium but not extreme for
+      Berlin specialty coffee. The COGS breakdown exists in spec but is not
+      customer-facing (potential for transparency activation). The pricing
+      inversion (dairy as modifier, -$0.50) is a designed signal. Margin
+      percentages (88% espresso, 70.7% oat latte) are backstage data
+      that would become a strong signal if made visible.
+
+  experiential:
+    score: 9
+    strength: dominant
+    signal_sources:
+      - "products/espresso.yaml: extraction params (18g, 93C, 9bar, 28s, 36ml)"
+      - "products/cappuccino.yaml: foam depth spec (12-18mm)"
+      - "brand/identity.yaml: temperature control (21C +/- 1C)"
+      - "brand/identity.yaml: lighting warmth (2700K)"
+      - "brand/identity.yaml: music volume limits (45-55 dB)"
+      - "processes/quality_control.yaml: grinder calibration, extraction timing"
+      - "compliance/food_safety.yaml: HACCP 5 CCPs"
+    designed_signals: 5
+    ambient_signals: 2
+    assessment: >
+      Dominant experiential dimension. The specification depth for sensory
+      parameters is exceptional -- millimeter foam depth, gram-level dosing,
+      second-level extraction timing, degree-level temperature control.
+      This is where Spectra Coffee's specification-first identity is most
+      evident. The environment specs (temperature, lighting, music) create
+      consistent ambient experiential signals. This dimension justifies the
+      premium pricing.
+
+  cultural:
+    score: 6
+    strength: moderate
+    signal_sources:
+      - "organization.yaml: Berlin location (European third-wave codes)"
+      - "brand/identity.yaml: chalkboard A-frame with daily rotation (artisanal code)"
+      - "brand/identity.yaml: interior palette (natural materials, plant accents)"
+      - "processes/internal_communications.yaml: TPS/kaizen cultural references"
+    designed_signals: 2
+    ambient_signals: 2
+    assessment: >
+      Moderate cultural dimension. Berlin location provides strong ambient
+      cultural context (third-wave coffee capital). The chalkboard and natural
+      materials are designed cultural codes. The TPS/kaizen internal culture
+      leaks through as staff behavior but is not explicitly communicated.
+      Cultural depth is limited by single-location, recent founding (no
+      heritage dimension).
+
+  social:
+    score: 6
+    strength: moderate
+    signal_sources:
+      - "compliance/allergen_management.yaml: proactive allergen communication"
+      - "signals/observer-profiles.yaml: morning_regular profile (recognition valued)"
+      - "processes/internal_communications.yaml: tone principles (direct, kind, curious)"
+    designed_signals: 2
+    ambient_signals: 1
+    assessment: >
+      Moderate social dimension. Allergen communication is a designed
+      inclusion signal. The observer profiles acknowledge regulars as a
+      valued relationship category. Internal tone principles (blameless,
+      kind, curious) produce ambient social signals through staff behavior.
+      Limited by specification only -- actual social experience depends
+      heavily on individual executor rendering (L2 variance).
+
+# --- Aggregate Analysis ---
+
+aggregate:
+  dominant_dimensions:
+    - experiential  # 9 -- sensory precision is the core identity
+    - semiotic      # 7 -- strong visual system
+    - temporal      # 7 -- daily rhythm
+    - ideological   # 7 -- values enacted in operations
+  moderate_dimensions:
+    - narrative     # 6
+    - cultural      # 6
+    - social        # 6
+  weaker_dimensions:
+    - economic      # 5 -- present but underactivated
+
+  overall_intensity: 6.6  # mean across 8 dimensions
+
+  da_ratio:
+    designed: 23
+    ambient: 10
+    total: 33
+    ratio: 0.70  # 70% designed, 30% ambient
+    assessment: >
+      Healthy D/A ratio within the Goldilocks zone (55-65% is optimal for
+      SBT; Spectra Coffee is at 70%, slightly above optimal). The high
+      designed ratio reflects the specification-first approach -- most signals
+      are intentional. The ambient signals come primarily from location
+      (Berlin), internal culture leakage, and freshness decay. The D/A
+      ratio would drop if human executors introduce more ambient signals
+      (secondary emission: body language, mood, personal style).
+
+  coherence_type: signal
+  coherence_rationale: >
+    Signal coherence: strong specification coverage produces consistent
+    signals across all dimensions, with experiential as the dominant
+    differentiator. Not ecosystem (not maximally restrictive -- no waitlists,
+    no artificial scarcity). Not identity (ideological dimension is strong
+    but not activist). The specification architecture ensures signal
+    consistency is reproducible across locations through config fork.
+
+  spectral_signature:
+    pattern: "experiential-led, specification-coherent"
+    comparable_to: "Blue Bottle Coffee (pre-Nestle), Intelligentsia, specialty coffee category leaders"
+    differentiation: >
+      Spectra Coffee's spectral signature is distinguished by the DEGREE
+      of operational specification, not by the type of signals emitted.
+      Other specialty coffee brands emit similar signals but through tacit
+      knowledge and craft tradition. Spectra Coffee emits them through
+      explicit, version-controlled, testable specifications. The
+      specification IS the brand differentiator.

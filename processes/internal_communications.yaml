@@ -1,0 +1,580 @@
+version: 1.0.0
+
+description: >
+  Internal communications configuration for Spectra Coffee. Defines how
+  staff communicate with each other — meetings, tone, problem reporting,
+  idea sharing, incident analysis, and shift handovers. Structured around
+  Toyota Production System principles (andon, kaizen, gemba, hoshin kanri,
+  jidoka, 5 Whys) and ISO 9001:2015 Clause 7.4 / ISO 22000:2018 Clause
+  7.4.2 communication requirements.
+
+standards_reference:
+  - standard: ISO 9001:2015
+    clause: "7.4 — Communication"
+    requirement: >
+      Determine internal and external communications relevant to the QMS:
+      what to communicate, when, with whom, how, and who communicates.
+  - standard: ISO 22000:2018
+    clause: "7.4.2 — Internal communication"
+    requirement: >
+      The food safety team shall be informed in a timely manner of changes
+      to products, processes, production environment, equipment, cleaning
+      programs, packaging, applicable legislation, customer complaints,
+      and any conditions affecting food safety.
+  - standard: Toyota Production System
+    principles: [andon, kaizen, gemba, hoshin_kanri, jidoka, five_whys]
+
+# ---------------------------------------------------------------------------
+# Alignment — cascading objectives (TPS: hoshin kanri)
+# ---------------------------------------------------------------------------
+alignment:
+  source: organization.yaml
+  cascade:
+    level_1: mission   # "Serve excellent coffee with full transparency"
+    level_2: values    # [quality, transparency, sustainability]
+    level_3: daily_brief
+  principle: >
+    Every daily brief connects back to mission and values. Staff should
+    be able to trace any operational decision to an organizational value.
+    If they cannot, the decision needs re-examination or the values need
+    updating.
+
+# ---------------------------------------------------------------------------
+# Automation boundary (TPS: jidoka)
+# ---------------------------------------------------------------------------
+jidoka:
+  principle: >
+    Automate monitoring; keep judgment human. Machines detect; people decide.
+  automated:
+    # These generate alerts without human intervention
+    - source: compliance/food_safety.yaml:ccp_01
+      signal: refrigerator_temperature_breach
+      channel: telemetry_alert
+    - source: compliance/food_safety.yaml:ccp_03
+      signal: display_time_expiry
+      channel: pos_timer_alert
+    - source: inventory
+      signal: stock_level_below_reorder_point
+      channel: inventory_dashboard
+  human_judgment_required:
+    # These require a person to assess and act
+    - situation: customer_complaint
+      reason: "Context, tone, and severity require human reading."
+    - situation: quality_call_on_extraction
+      reason: "Taste is subjective. A 29s shot may be perfect or flat."
+    - situation: staff_conflict
+      reason: "Interpersonal issues cannot be resolved by protocol alone."
+    - situation: supplier_substitution_decision
+      reason: "Trade-offs between cost, quality, and values need judgment."
+
+# ---------------------------------------------------------------------------
+# Meetings
+# ---------------------------------------------------------------------------
+meetings:
+
+  daily_brief:
+    # TPS: asaichi (morning market) — the pre-shift standup
+    trigger: shift_start
+    duration_min: 10
+    max_duration_min: 12  # hard stop — if you cannot say it in 12min, write it down
+    attendees: [shift_lead, all_baristas_on_shift]
+    format: standup  # standing, not seated — keeps it short
+    location: behind_counter  # gemba: where the work happens
+    agenda:
+      - item: yesterday_review
+        time_min: 2
+        content:
+          - sales_count
+          - any_incidents
+          - customer_feedback_highlights
+      - item: today_focus
+        time_min: 3
+        content:
+          - specials
+          - expected_traffic
+          - deliveries_scheduled
+          - equipment_notes
+      - item: kaizen_highlight
+        time_min: 2
+        content: >
+          One improvement idea — either from yesterday's submissions or
+          a live suggestion. Keep it concrete: what changed, what improved.
+      - item: open_floor
+        time_min: 3
+        content:
+          - questions
+          - concerns
+          - personal_updates
+    record:
+      type: shift_log
+      format: brief_notes  # not full minutes — bullet points
+      retention: 90_days
+    anti_patterns:
+      - "Do not read metrics aloud that everyone can see on the board."
+      - "Do not solve problems in the brief. Flag them; solve them after."
+      - "Do not let the brief become a monologue. Shift lead facilitates, does not lecture."
+
+  weekly_review:
+    schedule: monday_before_open
+    duration_min: 30
+    max_duration_min: 40
+    attendees: [manager, all_shift_leads]
+    agenda:
+      - item: metrics_review
+        time_min: 8
+        content:
+          - weekly_sales_vs_target
+          - waste_kg_and_cost
+          - customer_complaint_count_and_themes
+          - cogs_vs_target_pct
+      - item: kaizen_board_review
+        time_min: 10
+        content: >
+          Review all submitted ideas from the week. Decide: try, park,
+          or decline (with reason). Assign owner and trial dates for
+          accepted ideas.
+      - item: compliance_status
+        time_min: 7
+        content:
+          - haccp_deviations_since_last_review
+          - allergen_incidents
+          - training_due_dates
+          - reference: compliance/food_safety.yaml
+          - reference: compliance/allergen_management.yaml
+      - item: upcoming_changes
+        time_min: 5
+        content:
+          - menu_changes
+          - supplier_updates
+          - schedule_adjustments
+          - equipment_maintenance_planned
+    record:
+      type: meeting_minutes
+      format: written_summary
+      distribution: all_staff  # posted on staff board + digital channel
+      retention: 1_year
+
+  monthly_one_on_one:
+    schedule: monthly
+    duration_min: 20
+    max_duration_min: 30  # can run long — this is the space for it
+    attendees: [manager, individual_staff_member]
+    agenda:
+      - item: performance_feedback
+        style: two_way  # not top-down — both parties give and receive
+        note: >
+          Start with "What's going well?" before addressing gaps.
+          Use specific examples, not generalizations.
+      - item: development
+        content:
+          - skills_to_learn
+          - career_interests
+          - training_requested
+      - item: concerns
+        content: >
+          Anything the staff member wants to raise. This is their meeting,
+          not the manager's. If there is nothing to discuss, end early.
+    record:
+      type: private_notes
+      distribution: only_the_two_participants
+      retention: 2_years
+      storage: manager_secure_file  # not on shared board
+
+# ---------------------------------------------------------------------------
+# Tone of voice — internal communication style
+# ---------------------------------------------------------------------------
+tone:
+  scope: >
+    How staff talk to each other in operational context. For customer-facing
+    tone, see the service quality process (when created) or
+    brand/identity.yaml for brand voice.
+
+  principles:
+    - id: direct
+      description: "Say what you mean. No corporate euphemisms."
+      example_good: "The grinder is miscalibrated — shots are running 35s."
+      example_bad: "We might want to look into potential optimization opportunities for the grinding process."
+
+    - id: specific
+      description: "Use numbers, not adjectives. Quantify when possible."
+      example_good: "We threw out 4 croissants yesterday — display time exceeded 8h."
+      example_bad: "We had some waste issues with pastries."
+
+    - id: blameless
+      description: "Focus on the process, not the person. Systems fail, not people."
+      example_good: "The closing checklist didn't include grinder cleaning. Let's add it."
+      example_bad: "You forgot to clean the grinder again."
+
+    - id: kind
+      description: "Direct is not rude. Specificity is not criticism. Check in on people."
+      example_good: "Hey, I noticed you seem tired today — everything OK?"
+      example_bad: "(Saying nothing and writing it up as low performance.)"
+
+    - id: curious
+      description: "Ask why before assuming. The person closest to the work usually knows most."
+      example_good: "I noticed you changed the grind setting — what were you seeing in the shots?"
+      example_bad: "Don't touch the grind settings without asking."
+
+  formality:
+    staff_to_staff: informal            # first names, casual
+    staff_to_manager: informal          # first names, open door
+    written_records: semi_formal        # clear and complete, no slang, not stiff
+    customer_facing: warm_professional  # see brand/identity.yaml
+
+# ---------------------------------------------------------------------------
+# Problem reporting (TPS: andon)
+# ---------------------------------------------------------------------------
+andon:
+  principle: >
+    Any staff member can and should report problems immediately. No problem
+    is too small. Reporting is celebrated, not punished. The andon cord is
+    a cultural commitment: we would rather stop and fix than continue and
+    fail.
+
+  channels:
+    immediate:
+      description: "Issues that affect current operations right now."
+      method: verbal_to_shift_lead
+      max_response_time_s: 60
+      examples:
+        - equipment_malfunction
+        - customer_complaint_in_progress
+        - safety_hazard
+        - stock_out_of_key_ingredient
+
+    non_urgent:
+      description: "Observations that don't need instant action but should be tracked."
+      method: andon_board  # physical board near staff area or shared digital channel
+      review_frequency: daily_brief
+      examples:
+        - minor_equipment_wear_noticed
+        - supplier_quality_trend_over_multiple_deliveries
+        - process_step_that_feels_inefficient
+        - near_miss_that_did_not_cause_harm
+
+    safety_critical:
+      description: "Food safety, allergen, or physical safety issues."
+      method: verbal_to_anyone_present + written_incident_report
+      max_response_time_s: 0  # immediate — do not wait
+      authority: any_staff_member_can_halt_operations
+      halt_scope: >
+        The staff member who identifies the risk has full authority to stop
+        serving the affected product, remove it from display, or shut down
+        the affected equipment. No approval is needed. The shift lead is
+        notified after the halt, not before.
+      examples:
+        - allergen_contamination_risk
+        - equipment_safety_failure
+        - pest_sighting
+        - customer_allergic_reaction
+      reference: compliance/allergen_management.yaml:incident_response
+
+  no_blame_policy:
+    statement: >
+      Reporting a problem is an act of quality. The person who reports is
+      protecting the team and the customer. Punishing reporters creates
+      silence; silence creates risk.
+    enforcement: >
+      If any staff member reports being discouraged from reporting,
+      the manager must review within 24h and take corrective action.
+      Retaliation for reporting is grounds for disciplinary action
+      against the retaliator, not the reporter.
+    escalation_if_violated: manager_review
+
+# ---------------------------------------------------------------------------
+# Idea sharing (TPS: kaizen)
+# ---------------------------------------------------------------------------
+kaizen:
+  principle: >
+    The people doing the work are the experts on how to improve it.
+    Management's job is to create the structure that makes improvement
+    easy, not to be the source of all improvements.
+
+  submission:
+    who: any_staff_member
+    method: kaizen_card  # physical card in a designated box, or digital form
+    required_fields:
+      - what: "What could be better?"
+      - why: "What problem does this solve or what waste does it eliminate?"
+    optional_fields:
+      - how: "Suggested approach — the 'what' is enough if you don't have a 'how'."
+      - estimated_impact:
+          categories: [time_saved, cost_saved, quality_improved, safety_improved]
+
+  review:
+    frequency: weekly_review_meeting
+    reviewer: [manager, shift_leads]
+    criteria:
+      - feasibility: "Can we try this within a week with existing resources?"
+      - impact: "Does this affect quality, cost, safety, or customer experience?"
+      - reversibility: "Can we undo it if it doesn't work?"
+    decisions:
+      - try: "Accept for trial — assign owner, define success metric, set trial dates."
+      - park: "Good idea but not now — record reason and revisit date."
+      - decline: "Not viable — explain why to the submitter directly."
+
+  implementation:
+    trial_period_days: 14
+    success_metric: defined_before_trial_starts
+    review_at: next_weekly_review_after_trial_ends
+    decision: keep_modify_or_revert
+    documentation: >
+      If kept, update the relevant YAML spec to reflect the new process.
+      The kaizen is not complete until the config matches reality.
+
+  recognition:
+    implemented_ideas: acknowledged_in_daily_brief
+    monthly_highlight: best_kaizen_of_the_month_posted_on_board
+    reward: non_financial
+    rationale: >
+      Recognition, not money. Financial incentives distort what gets
+      suggested — people optimize for bounties, not for improvement.
+      The reward is seeing your idea become the new standard.
+
+# ---------------------------------------------------------------------------
+# Nonconformance reporting (QMS: NCR)
+# ---------------------------------------------------------------------------
+nonconformance:
+  description: >
+    Structured reporting for any deviation from a product or process spec.
+    This is the formal QMS mechanism that complements the andon system.
+    Andon is the immediate response; NCR is the documented record and
+    root-cause investigation.
+
+  trigger: any_deviation_from_process_or_product_spec
+
+  report_format:
+    required_fields:
+      - timestamp: ISO_8601
+      - reporter: staff_name
+      - process_reference: >
+          Path to the spec that was violated, e.g.:
+          products/espresso.yaml:preparation.steps[3].acceptable_range_s
+          compliance/food_safety.yaml:ccp_01.critical_limit.max_c
+          compliance/allergen_management.yaml:cross_contamination_matrix.equipment[1].mitigation
+      - observed_value: "What actually happened (with units)."
+      - expected_value: "What the spec says should happen (with units)."
+      - severity: [minor, major, critical]
+      - immediate_action_taken: "What was done right now to contain the issue."
+    optional_fields:
+      - root_cause: "Why it happened — use 5 Whys if not immediately obvious."
+      - corrective_action: "What should change to prevent recurrence."
+      - photos: "Visual evidence when relevant."
+      - related_ncr: "Link to previous NCR if this is a recurrence."
+
+  severity_definitions:
+    minor:
+      description: >
+        Deviation from spec with no customer impact and no safety risk.
+      examples:
+        - "Espresso extraction ran 32s (spec: 26-30s per products/espresso.yaml:preparation.steps[3].acceptable_range_s)."
+        - "Grind particle size measured at 310um (spec: 200-300um per products/espresso.yaml:preparation.steps[0].particle_size_um)."
+      response: reviewed_at_next_daily_brief
+
+    major:
+      description: >
+        Deviation with potential customer impact, or a minor nonconformance
+        that has recurred 3+ times within 30 days.
+      examples:
+        - "Milk stored at 6C for >1h (spec: max 5C per compliance/food_safety.yaml:ccp_01.critical_limit.max_c)."
+        - "Croissant displayed for 9h (spec: max 8h per products/croissant.yaml:storage.display.max_display_time_h)."
+      response: reviewed_within_24h_by_manager
+
+    critical:
+      description: >
+        Food safety risk, allergen incident, or equipment safety failure.
+        Triggers immediate halt per andon.safety_critical protocol.
+      examples:
+        - "Allergen cross-contamination: dairy milk used in order flagged as dairy-free."
+        - "Customer reports allergic reaction after consuming product."
+        - "Equipment safety failure: steam wand valve stuck open."
+      response: immediate_halt_and_incident_response
+      reference: compliance/allergen_management.yaml:incident_response
+
+  root_cause_analysis:
+    method: five_whys
+    template:
+      why_1: "Why did the nonconformance occur?"
+      why_2: "Why did that cause exist?"
+      why_3: "Why was that deeper cause present?"
+      why_4: "Why was that condition possible in our process?"
+      why_5: "What systemic factor — in our config, training, or equipment — allowed all of the above?"
+    guidance: >
+      Stop when you reach a process or system factor, not a person. If the
+      answer to any "why" is a person's name, you have not gone deep enough.
+      The goal is to find the gap in the system that made the error possible,
+      then close that gap.
+
+  corrective_action:
+    types:
+      containment:
+        description: "Immediate fix to stop the nonconformance from affecting customers."
+        examples:
+          - discard_affected_product
+          - recalibrate_equipment
+          - retrain_staff_member
+      prevention:
+        description: "Spec change to prevent recurrence. Update the relevant YAML."
+        examples:
+          - add_check_to_closing_checklist
+          - update_critical_limit_in_food_safety_yaml
+          - add_equipment_maintenance_schedule
+      verification:
+        description: "How to confirm the fix works."
+        examples:
+          - monitoring_period_of_14_days
+          - re_audit_at_next_internal_audit
+          - atp_swab_test_confirmation
+    tracking: corrective_action_log
+    closure: >
+      An NCR is closed only when the corrective action has been implemented,
+      verified, and — if applicable — the relevant YAML config has been
+      updated to reflect the new process.
+
+# ---------------------------------------------------------------------------
+# Gemba walks
+# ---------------------------------------------------------------------------
+gemba:
+  principle: >
+    Go and see. Don't manage from the office. The truth is at the bar,
+    not in the spreadsheet. Gemba is not inspection — it is learning.
+
+  schedule:
+    manager:
+      frequency: daily
+      duration_min: 15
+      timing: during_peak_hour  # see reality under pressure, not ideal conditions
+    shift_lead:
+      frequency: per_shift
+      duration_min: 5
+      timing: mid_shift
+
+  observation_criteria:
+    - category: process_adherence
+      look_for: >
+        Are preparation steps being followed as specified in product YAMLs?
+        Any workarounds or shortcuts? If staff deviate from spec consistently,
+        the spec may be wrong — investigate before correcting.
+    - category: equipment_condition
+      look_for: >
+        Is equipment clean, calibrated, and functioning? Check grinder
+        retention, steam wand condition, display case temperature.
+    - category: staff_wellbeing
+      look_for: >
+        Are people stressed, overwhelmed, or disengaged? Is the shift
+        adequately staffed for current traffic? Is anyone struggling
+        silently?
+    - category: customer_experience
+      look_for: >
+        What is the customer actually experiencing right now? Wait times,
+        drink quality, ambient environment. Sit at a table for 2min and
+        observe as a customer would.
+    - category: waste
+      look_for: >
+        Any visible waste — time (waiting, searching), material (spills,
+        over-dosing, discards), motion (unnecessary movement between
+        stations), or inventory (overstocked perishables).
+      reference: >
+        TPS 7 wastes: overproduction, waiting, transport, overprocessing,
+        inventory, motion, defects.
+
+  output:
+    notes: brief_observations  # 3-5 bullet points, not a formal report
+    positive: >
+      Acknowledge good work immediately and in person. "I noticed you
+      re-calibrated the grinder before I said anything — thank you."
+    issues: raise_on_andon_board_if_issue_found
+    trends: >
+      If the same observation appears 3+ times across walks, escalate
+      to weekly review for systemic analysis.
+
+# ---------------------------------------------------------------------------
+# Shift handover
+# ---------------------------------------------------------------------------
+handover:
+  trigger: shift_change
+  duration_min: 5
+  max_duration_min: 8
+  method: face_to_face  # not written-only — verbal handover with written backup
+  location: behind_counter  # at the workstation, not in the office
+
+  checklist:
+    - item: equipment_status
+      content: >
+        Any issues with machines? Grinder calibration status (current
+        setting and last shot time)? Anything out of service?
+    - item: inventory_alerts
+      content: >
+        What is running low? Any items 86'd (unavailable)? Expected
+        deliveries?
+    - item: customer_notes
+      content: >
+        Any ongoing situations? Complaints in progress? Regulars with
+        special requests today?
+    - item: food_safety_flags
+      content: >
+        Any CCP deviations this shift? Croissant display times (when
+        were they placed)? Fridge temp status?
+      reference: compliance/food_safety.yaml
+    - item: staff_notes
+      content: >
+        Anything the next shift should know about the team? Anyone
+        having a tough day? Training activities in progress?
+    - item: pending_tasks
+      content: >
+        What was not finished? What needs follow-up? Any open NCRs?
+
+  record:
+    type: handover_log
+    format: timestamped_checklist
+    signed_by: [outgoing_shift_lead, incoming_shift_lead]
+    retention: 90_days
+
+# ---------------------------------------------------------------------------
+# Communication about changes (ISO 22000:2018 Clause 7.4.2)
+# ---------------------------------------------------------------------------
+change_communication:
+  description: >
+    When any config file changes — new product, updated process, revised
+    critical limit — affected staff must be informed before the change
+    takes effect. This is not optional; it is a food safety requirement.
+
+  required_notifications:
+    - change_type: product_spec_change
+      examples:
+        - new_ingredient
+        - modified_preparation_step
+        - allergen_status_change
+      notify: all_staff
+      method: daily_brief + written_update_on_staff_board
+      timing: before_change_takes_effect
+      reference: "Any file under products/"
+
+    - change_type: food_safety_change
+      examples:
+        - revised_critical_limit
+        - new_ccp_added
+        - corrective_action_procedure_updated
+      notify: [manager, all_shift_leads, food_safety_team]
+      method: dedicated_briefing  # not just daily brief
+      timing: before_change_takes_effect
+      reference: "Any file under compliance/"
+
+    - change_type: equipment_change
+      examples:
+        - new_equipment_installed
+        - equipment_removed_from_service
+        - maintenance_affecting_operations
+      notify: all_staff_on_affected_shifts
+      method: daily_brief + equipment_status_board
+      timing: before_affected_shift
+
+    - change_type: supplier_change
+      examples:
+        - new_supplier
+        - ingredient_substitution
+        - allergen_profile_change_from_supplier
+      notify: [manager, shift_leads, food_safety_team]
+      method: written_notification + allergen_matrix_update
+      timing: before_new_supply_is_used
+      reference: compliance/allergen_management.yaml

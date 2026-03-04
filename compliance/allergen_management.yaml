@@ -1,0 +1,199 @@
+version: 1.0.0
+
+standard: EU Regulation 1169/2011 (Annex II — 14 major allergens)
+scope: "Spectra Coffee flagship location"
+responsible: manager
+last_review: 2026-01-15
+next_review: 2027-01-15
+
+allergen_inventory:
+  # Consolidated from all product specs
+  present_in_products:
+    - allergen: milk
+      eu_annex_ii_number: 7
+      sources:
+        - product: products/cappuccino.yaml
+          ingredient: whole_milk
+          type: declared
+        - product: products/croissant.yaml
+          ingredient: butter, milk_powder
+          type: declared
+      also_cross_contamination_via:
+        - shared_steam_wand (affects all steamed beverages)
+
+    - allergen: wheat (gluten)
+      eu_annex_ii_number: 1
+      sources:
+        - product: products/croissant.yaml
+          ingredient: wheat_flour
+          type: declared
+
+    - allergen: eggs
+      eu_annex_ii_number: 3
+      sources:
+        - product: products/croissant.yaml
+          ingredient: egg_wash
+          type: declared
+
+    - allergen: oats
+      eu_annex_ii_number: 1  # falls under cereals containing gluten
+      gluten_status: gluten_free_certified  # Oatly Barista is GF
+      sources:
+        - product: products/oat_latte.yaml
+          ingredient: oat_milk
+          type: declared
+
+  cross_contamination_only:
+    - allergen: tree_nuts
+      eu_annex_ii_number: 8
+      sources:
+        - shared_grinder (if flavored beans used)
+        - shared_display_case
+      risk_level: negligible_to_low
+
+    - allergen: soy
+      eu_annex_ii_number: 6
+      sources:
+        - croissant_supplier_facility
+      risk_level: low
+
+cross_contamination_matrix:
+  description: >
+    Equipment shared between products containing different allergens.
+    Risk levels: negligible, low, moderate, high.
+
+  equipment:
+    - id: espresso_grinder
+      shared_between: [espresso, oat_latte, cappuccino]
+      allergen_risk:
+        tree_nuts: negligible  # only if flavored beans are ever ground
+      mitigation: dedicated_grinder_for_unflavored_beans
+      cleaning_frequency: daily_full_disassembly
+
+    - id: steam_wand
+      shared_between: [oat_latte, cappuccino]
+      allergen_risk:
+        milk: moderate  # dairy residue can transfer to plant-milk drinks
+        oats: low       # oat milk residue can transfer to dairy drinks
+      mitigation:
+        - purge_steam_3s_after_each_use
+        - wipe_wand_with_dedicated_cloth
+        - dairy_before_plant_milk_sequence_preferred
+      cleaning_frequency: purge_per_use, deep_clean_end_of_day
+
+    - id: display_case
+      shared_between: [croissant]  # currently only bakery item
+      allergen_risk:
+        wheat: present     # croissant crumbs
+        milk: present      # butter in croissant
+        eggs: present      # egg wash
+        tree_nuts: moderate  # if nut-containing items added in future
+      mitigation:
+        - separate_shelf_positions_by_allergen_group
+        - dedicated_tongs_per_allergen_group
+        - clean_shelves_every_4h
+      cleaning_frequency: every_4h_surface_wipe, daily_full_clean
+
+    - id: espresso_machine_group_head
+      shared_between: [espresso, oat_latte, cappuccino]
+      allergen_risk: null  # coffee only, no allergen transfer risk
+      cleaning_frequency: backflush_daily
+
+staff_training:
+  requirements:
+    - id: train_01
+      topic: Allergen awareness (EU 14 major allergens)
+      frequency: upon_hiring + annual_refresher
+      duration_min: 60
+      provider: certified_food_safety_trainer
+      assessment: written_test
+      pass_threshold_pct: 80
+
+    - id: train_02
+      topic: Cross-contamination prevention procedures
+      frequency: upon_hiring + semi_annual_refresher
+      duration_min: 30
+      provider: shift_lead_or_manager
+      assessment: practical_demonstration
+      skills:
+        - correct_steam_wand_purge_technique
+        - equipment_cleaning_between_allergen_groups
+        - reading_and_explaining_allergen_matrix_to_customers
+
+    - id: train_03
+      topic: Anaphylaxis emergency response
+      frequency: upon_hiring + annual_refresher
+      duration_min: 45
+      provider: first_aid_certified_trainer
+      assessment: practical_scenario
+      skills:
+        - recognizing_symptoms
+        - administering_epinephrine_auto_injector
+        - calling_emergency_services
+        - incident_documentation
+
+  records:
+    storage: digital_hr_system
+    retention_years: 5
+    fields: [staff_id, training_id, date, result, trainer, next_due]
+
+customer_communication:
+  protocol:
+    - step: ask_first
+      description: >
+        Every order interaction begins with: "Do you have any allergies
+        or dietary requirements we should know about?"
+      applies_to: [barista, shift_lead]
+      exceptions: [returning_regular_with_known_preferences_on_file]
+
+    - step: inform
+      description: >
+        If allergen declared, inform customer of specific risks including
+        cross-contamination from shared equipment.
+      detail_level: ingredient_and_equipment_source
+
+    - step: confirm
+      description: >
+        Repeat allergen information back to customer before preparing order.
+        Customer verbally confirms acceptance of risk.
+
+    - step: flag_order
+      description: >
+        Mark order ticket with allergen flag. Preparing barista must read
+        flag before starting preparation.
+      flag_format: red_sticker_on_cup + digital_order_note
+
+  visible_materials:
+    - type: allergen_matrix_poster
+      location: counter_facing_customer
+      format: grid (products x 14 EU allergens)
+      languages: [de, en]
+      update_frequency: whenever_menu_changes
+
+    - type: product_cards
+      location: display_case
+      format: individual_cards_per_item
+      content: [product_name, declared_allergens, may_contain_statement]
+      languages: [de, en]
+
+    - type: digital_menu
+      location: menu_board
+      format: allergen_icons_next_to_each_product
+      icon_standard: EU_pictogram_set
+
+  incident_response:
+    - severity: mild_reaction
+      actions:
+        - offer_assistance
+        - log_incident
+        - review_preparation_steps
+        - manager_notification_within_1h
+    - severity: severe_reaction_suspected_anaphylaxis
+      actions:
+        - call_112 (EU emergency number)
+        - administer_epinephrine_if_available_and_trained
+        - do_not_leave_customer_unattended
+        - preserve_all_food_items_involved
+        - manager_notification_immediate
+        - incident_report_within_24h
+        - regulatory_notification_if_required

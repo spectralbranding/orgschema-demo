@@ -1,0 +1,459 @@
+version: 1.0.0
+
+description: >
+  Equipment maintenance schedule for Spectra Coffee flagship location.
+  Defines daily, weekly, monthly, quarterly, and annual maintenance tasks
+  for all coffee preparation and food service equipment. The product specs
+  define what perfect output looks like; this document defines how to keep
+  the equipment capable of producing it.
+
+standards_reference:
+  - standard: ISO 22000:2018
+    clause: "8.2 — Prerequisite programmes (PRPs)"
+    requirement: >
+      The organization shall establish, implement, maintain, and update
+      prerequisite programmes to facilitate prevention of contamination
+      including maintenance of equipment and the working environment.
+  - standard: Manufacturer guidelines
+    note: >
+      Specific maintenance intervals may vary by equipment make and model.
+      When manufacturer instructions conflict with this schedule, follow
+      the manufacturer. Update this file to reflect any deviations.
+
+# ---------------------------------------------------------------------------
+# Daily maintenance (performed during closing)
+# ---------------------------------------------------------------------------
+daily:
+  when: during_closing_procedure
+  responsible: shift_lead
+  cross_reference: processes/opening_closing.yaml:closing
+
+  tasks:
+
+    - id: daily_01
+      equipment: espresso_machine
+      task: group_head_backflush
+      details: >
+        Insert blind basket, add 2g cleaning detergent. Run 5 cycles
+        per group head (10s on, 10s off). Flush with clean water for
+        30s after final cycle. Removes coffee oils that cause rancid
+        flavors if left overnight.
+      cycles_per_group: 5
+      detergent: espresso_machine_cleaner
+
+    - id: daily_02
+      equipment: espresso_machine
+      task: steam_wand_cleaning
+      details:
+        during_service: >
+          Purge steam for 2s and wipe with damp cloth after every use.
+          Non-negotiable — dried milk inside the wand contaminates the
+          next drink and breeds bacteria.
+        end_of_day: >
+          Run steam for 5s to clear internal residue. Remove steam tip.
+          Soak tip in cleaning solution for 10min. Scrub with nylon
+          brush. Rinse, dry, reattach.
+      solution_soak_min: 10
+
+    - id: daily_03
+      equipment: espresso_machine
+      task: portafilter_and_basket_cleaning
+      details: >
+        Remove baskets from portafilters. Soak baskets and portafilter
+        spouts in cleaning solution for 10min. Scrub with nylon brush
+        to remove coffee oil residue. Rinse thoroughly. Dry. Reassemble
+        and lock portafilters into group heads overnight to maintain
+        gasket shape.
+
+    - id: daily_04
+      equipment: espresso_machine
+      task: drip_tray
+      details: empty, wash with hot soapy water, sanitize, dry, replace
+
+    - id: daily_05
+      equipment: grinder
+      task: end_of_day_brush_clean
+      details: >
+        Remove hopper. Brush out retained grounds from burr chamber with
+        dedicated grinder brush. Wipe exterior with dry cloth. Do NOT
+        use water on any grinder component — moisture damages burrs and
+        can cause motor corrosion.
+      warning: no_water
+
+    - id: daily_06
+      equipment: knock_box
+      task: empty_and_rinse
+      details: empty spent puck waste, rinse with hot water, air dry
+
+    - id: daily_07
+      equipment: espresso_machine
+      task: set_to_standby
+      details: >
+        Switch machine to standby mode at end of closing. Do NOT power
+        off completely. Standby maintains boiler at reduced temperature,
+        enabling faster morning warmup (25-30min vs 35-45min from cold)
+        and reducing thermal stress on heating elements.
+
+# ---------------------------------------------------------------------------
+# Weekly maintenance
+# ---------------------------------------------------------------------------
+weekly:
+  when: designated_day  # choose a quieter day; perform before or after service
+  responsible: shift_lead
+  estimated_duration_min: 45
+
+  tasks:
+
+    - id: weekly_01
+      equipment: grinder
+      task: full_burr_cleaning
+      details: >
+        Remove hopper and any remaining beans. Run grinder briefly to
+        clear chamber. Disassemble burr carrier per manufacturer
+        instructions. Brush all retained fines from burrs, burr chamber,
+        and chute with stiff grinder brush. Inspect burrs for wear (see
+        quarterly inspection). Reassemble carefully, ensuring burrs seat
+        correctly. Recalibrate grind setting — burr position may shift
+        slightly after reassembly.
+      recalibrate_after: true
+      cross_reference: processes/quality_control.yaml:daily_calibration.recalibration_triggers
+
+    - id: weekly_02
+      equipment: espresso_machine
+      task: group_head_gasket_inspection
+      details: >
+        Remove portafilter and visually inspect group gasket. Look for:
+        cracking, hardening, coffee oil buildup around seal edges,
+        uneven compression marks. A worn gasket causes leaking during
+        extraction and inconsistent pressure.
+      replace_if: cracked, hardened, or leaking
+
+    - id: weekly_03
+      equipment: espresso_machine
+      task: shower_screen_deep_clean
+      details: >
+        Remove shower screen from each group head (usually one screw or
+        bayonet fitting). Soak in cleaning solution for 30min. Scrub
+        with nylon brush to remove coffee oil deposits from all holes.
+        Rinse thoroughly. Inspect for blocked holes — even one blocked
+        hole causes uneven water distribution and channeling. Reinstall.
+      soak_duration_min: 30
+
+    - id: weekly_04
+      equipment: espresso_machine
+      task: steam_wand_descale
+      details: >
+        Use pin tool or thin needle to clear each hole in the steam tip.
+        Soak entire tip assembly in descaling solution for 15min. Verify
+        all holes produce even steam output. Replace tip if holes are
+        enlarged or damaged.
+
+    - id: weekly_05
+      equipment: water_system
+      task: softener_salt_check
+      details: >
+        Check salt level in water softener (if applicable to installation).
+        Refill if below manufacturer's minimum line. Low salt = hard water
+        = scale buildup in boiler.
+      note: not_all_installations_use_salt_softeners
+
+# ---------------------------------------------------------------------------
+# Monthly maintenance
+# ---------------------------------------------------------------------------
+monthly:
+  when: first_monday_of_month  # schedule consistently; block machine downtime
+  responsible: manager
+  estimated_duration_min: 90
+
+  tasks:
+
+    - id: monthly_01
+      equipment: espresso_machine
+      task: full_descale
+      details: >
+        Follow manufacturer descaling protocol. Typically: add descaling
+        solution to water reservoir or through service port, run through
+        each group head and steam wand, flush with clean water until
+        pH is neutral. Machine is out of service during this process.
+      duration_min: 45
+      machine_downtime: true
+      scheduling_note: >
+        Perform before opening or after closing to avoid service
+        interruption. Coordinate with opening/closing schedule.
+
+    - id: monthly_02
+      equipment: grinder
+      task: burr_inspection
+      details: >
+        During weekly burr cleaning, perform detailed inspection:
+        check cutting edges for rounding or chips, look for uneven
+        wear patterns. If burr measurement gauge is available, measure
+        and record burr diameter/depth. Compare to manufacturer
+        new-burr specifications.
+      record: burr_condition_in_maintenance_log
+
+    - id: monthly_03
+      equipment: water_system
+      task: filter_flow_rate_check
+      details: >
+        Measure water flow rate through filter system. Compare to
+        baseline (recorded at filter installation). If flow rate has
+        dropped below 70% of baseline, schedule filter replacement.
+        Low flow affects machine fill rate and extraction consistency.
+      cross_reference: compliance/food_safety.yaml:prp_03
+
+    - id: monthly_04
+      equipment: oven
+      task: temperature_calibration
+      details: >
+        Place probe thermometer in center of oven. Set oven to 180C.
+        Allow 15min to stabilize. Compare probe reading to display.
+        Acceptable variance: +/- 5C. If outside tolerance, adjust
+        oven calibration per manufacturer instructions or schedule
+        service.
+      reference_temp_c: 180
+      tolerance_c: 5
+      cross_reference: products/croissant.yaml:preparation.steps[0].temperature_c
+
+    - id: monthly_05
+      equipment: oven
+      task: interior_cleaning
+      details: >
+        Remove racks and trays. Clean interior walls, floor, and door
+        glass with oven cleaner (non-caustic, food-safe). Clean racks
+        separately. Inspect door seal for wear or food buildup. Replace
+        seal if damaged.
+
+# ---------------------------------------------------------------------------
+# Quarterly maintenance
+# ---------------------------------------------------------------------------
+quarterly:
+  when: first_week_of_quarter
+  responsible: manager
+  estimated_duration_min: 120  # including technician visit
+
+  tasks:
+
+    - id: quarterly_01
+      equipment: water_system
+      task: filter_replacement
+      details: >
+        Replace water filter cartridge(s) per manufacturer schedule.
+        Some installations require quarterly, others semi-annually —
+        follow manufacturer recommendation or replace when flow rate
+        drops below threshold (see monthly_03). After replacement,
+        flush system for 5min before use. Test TDS with calibrated
+        meter.
+      post_replacement:
+        - flush_min: 5
+        - tds_test: true
+        - acceptable_tds_ppm: [100, 150]
+      reference: products/espresso.yaml:ingredients.water.tds_ppm
+      cross_reference: compliance/food_safety.yaml:prp_03
+
+    - id: quarterly_02
+      equipment: espresso_machine
+      task: professional_service
+      details: >
+        Schedule certified technician for preventive inspection.
+        Technician should inspect: boiler condition (scale, corrosion),
+        pump pressure and flow rate, solenoid valve operation, group
+        head seals and springs, PID sensor accuracy, electrical
+        connections, and water inlet/outlet fittings.
+      provider: manufacturer_authorized_service
+      record: technician_service_report_in_maintenance_log
+
+    - id: quarterly_03
+      equipment: water_system
+      task: tds_verification
+      details: >
+        Test water TDS with calibrated refractometer or TDS meter.
+        Compare to product spec range. If TDS has drifted outside
+        range, investigate filter condition, source water changes,
+        or softener function.
+      acceptable_tds_ppm: [100, 150]
+      reference: compliance/food_safety.yaml:prp_03
+
+    - id: quarterly_04
+      equipment: grinder
+      task: motor_inspection
+      details: >
+        Listen for bearing noise during operation (grinding and idle).
+        Unusual whining, grinding, or rattling indicates bearing wear.
+        Check motor temperature after 30s continuous run — should be
+        warm, not hot. If abnormal, schedule service before failure.
+
+# ---------------------------------------------------------------------------
+# Annual maintenance
+# ---------------------------------------------------------------------------
+annual:
+  when: scheduled_during_planned_closure_or_slow_period
+  responsible: manager
+  estimated_duration_min: 480  # full day with technician
+
+  tasks:
+
+    - id: annual_01
+      equipment: espresso_machine
+      task: full_service_by_certified_technician
+      details: >
+        Comprehensive annual service including: full boiler inspection
+        and descale, pressure relief valve test and certification,
+        heating element resistance test, pump rebuild or replacement
+        if needed, all seals and gaskets replaced, electrical safety
+        test (PAT), water line inspection, and full operational test
+        under load.
+      provider: manufacturer_certified_technician
+      record: annual_service_certificate
+      scheduling: coordinate_with_planned_closure
+
+    - id: annual_02
+      equipment: grinder
+      task: burr_replacement
+      details: >
+        Replace burrs based on throughput. Track cumulative kg ground
+        since last replacement.
+      replacement_intervals:
+        flat_burrs_kg: [500, 800]    # replace between 500-800kg throughput
+        conical_burrs_kg: [1000, 1200]  # replace between 1000-1200kg throughput
+      indicators:
+        - grind_time_increasing_for_same_setting
+        - increased_fines_or_boulders_in_particle_distribution
+        - visible_rounding_of_cutting_edges
+        - inability_to_dial_in_within_normal_range
+      record: replacement_date_and_cumulative_kg_in_maintenance_log
+
+    - id: annual_03
+      equipment: water_system
+      task: full_filtration_overhaul
+      details: >
+        Replace all filter cartridges, media, and seals in the water
+        filtration system. Flush entire system. Verify TDS, hardness,
+        and pH are within specification. Record baseline flow rate for
+        monthly comparison.
+      post_replacement:
+        - flush_min: 10
+        - tds_test: true
+        - hardness_test: true
+        - flow_rate_baseline: record
+      reference: products/espresso.yaml:ingredients.water.tds_ppm
+
+    - id: annual_04
+      equipment: all
+      task: calibrate_measurement_instruments
+      details: >
+        Calibrate or verify accuracy of all measurement instruments:
+        probe thermometers (ice water and boiling water test), pressure
+        gauges (compare to reference gauge during technician visit),
+        TDS meter/refractometer (calibration solution), and scale
+        (calibration weights). Replace any instrument that cannot be
+        calibrated to within manufacturer tolerance.
+      instruments:
+        - probe_thermometers
+        - pressure_gauges
+        - tds_meter
+        - refractometer
+        - barista_scale
+
+# ---------------------------------------------------------------------------
+# Equipment inventory
+# ---------------------------------------------------------------------------
+equipment_inventory:
+  description: >
+    Equipment register for the flagship location. Make and model fields
+    are deployment-specific — update when equipment is installed. Serial
+    numbers and purchase dates should be recorded in the asset register.
+
+  items:
+
+    - id: equip_01
+      type: espresso_machine
+      make_model: "[specify at deployment]"
+      configuration: dual_boiler_2_group
+      location: main_bar
+      power: "[specify — typically 2800-4500W, 220-240V]"
+      notes: >
+        Dual boiler allows independent temperature control for brew and
+        steam. 2-group handles typical peak demand for a single-location
+        specialty shop.
+
+    - id: equip_02
+      type: grinder
+      make_model: "[specify at deployment]"
+      configuration:
+        burr_type: flat
+        burr_diameter_mm: 83
+        adjustment: stepless
+      location: main_bar
+      notes: >
+        Stepless adjustment provides finer control than stepped grinders.
+        83mm flat burrs produce consistent particle distribution at
+        espresso grind.
+
+    - id: equip_03
+      type: convection_oven
+      make_model: "[specify at deployment]"
+      location: prep_area
+      usage: par_bake_finishing
+      reference: products/croissant.yaml:preparation
+
+    - id: equip_04
+      type: refrigeration
+      make_model: "[specify at deployment]"
+      configuration: under_counter
+      monitoring:
+        type: continuous
+        sensor: mqtt_temperature_sensor
+        alert_threshold_c: 4.0
+        critical_limit_c: 5.0
+      reference: compliance/food_safety.yaml:ccp_01
+
+    - id: equip_05
+      type: water_filtration
+      make_model: "[specify at deployment]"
+      configuration:
+        stages: [carbon_filter, softener]
+        tds_control: bypass_blend_valve
+        target_tds_ppm: [100, 150]
+      reference: products/espresso.yaml:ingredients.water.tds_ppm
+
+    - id: equip_06
+      type: pos_terminal
+      make_model: "[specify at deployment]"
+      location: counter
+      integrations: [card_terminal, daily_reports, inventory_alerts]
+
+# ---------------------------------------------------------------------------
+# Maintenance log
+# ---------------------------------------------------------------------------
+maintenance_log:
+  description: >
+    All maintenance tasks must be recorded. The log provides an audit trail
+    for food safety compliance, tracks equipment degradation over time,
+    and enables data-driven replacement decisions (e.g., burr throughput
+    tracking).
+
+  record_format:
+    required_fields:
+      - date: ISO_8601
+      - task_id: reference_to_task_in_this_file
+      - performed_by: staff_name_or_technician
+      - outcome: completed, deferred, or issue_found
+      - notes: any_observations_or_anomalies
+    optional_fields:
+      - parts_replaced: description_and_part_number
+      - cost: amount_and_currency
+      - next_due: date_of_next_scheduled_occurrence
+      - photos: visual_record_of_condition
+
+  retention_years: 2
+  storage: maintenance_log_binder_and_digital_backup
+  reference: compliance/food_safety.yaml:documentation.records_retention_years
+
+  review:
+    frequency: monthly
+    reviewer: manager
+    purpose: >
+      Check for overdue tasks, recurring issues, and equipment nearing
+      replacement thresholds. Feed findings into weekly review meeting.
+    cross_reference: processes/internal_communications.yaml:meetings.weekly_review

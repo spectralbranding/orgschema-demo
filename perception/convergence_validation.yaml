@@ -1,0 +1,295 @@
+version: 1.0.0
+
+description: >
+  Convergence validation: traces every L0 customer experience goal through
+  the full TDD cascade (L0 -> L1 -> L2 -> L3 -> L4 -> L5) and verifies
+  circular satisfaction. This file IS the proof that SBT and config-org
+  are two views of the same system: the desired perception (SBT) determines
+  the operational specification (config-org), and the specification produces
+  the signals that create the perception.
+
+framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
+methodology_reference: "Config-org Reverse-Design TDD (NOTES_REVERSE_DESIGN_TDD.md)"
+
+# --- Traceability Chains ---
+# Each chain traces from a customer experience goal (L0) down to
+# sourcing (L5) and back up through signal emission to perception.
+
+traceability_chains:
+
+  # === EXPERIENTIAL DIMENSION (dominant) ===
+
+  - id: chain_01
+    dimension: experiential
+    l0_test: "L0_exp_01: Espresso is balanced, sweet, clean -- no bitterness"
+
+    l1_signals:
+      - signal_id: sig_12
+        description: "Foam depth precision (cappuccino)"
+      - signal_id: implicit_espresso_quality
+        description: "Consistent extraction quality visible at counter"
+    l1_satisfies_l0: >
+      If the espresso tastes balanced and clean, the experiential perception
+      goal is satisfied. The signal IS the experience in this case.
+
+    l2_contracts:
+      - source: products/espresso.yaml:preparation
+        quality_gates:
+          extraction_time_s: [26, 30]
+          temperature_c: [92, 94]
+          dose_g: [17.7, 18.3]
+          yield_ml: [34, 38]
+          pressure_bar: [8.5, 9.5]
+    l2_satisfies_l1: >
+      If the extraction parameters are within quality gates, the espresso
+      will taste balanced and clean. These are the unit tests.
+
+    l3_procedures:
+      executor_profile: human_artisan
+      source: products/espresso.yaml:preparation.steps
+      steps: ["grind (200-300um)", "dose (18g +/- 0.3g)", "distribute + tamp (14-16kg)", "extract (93C, 9bar, 28s)", "serve (demitasse)"]
+    l3_satisfies_l2: >
+      The human artisan procedure is one implementation that passes the L2
+      quality gate tests. A fully automated machine would implement different
+      steps but must pass the same tests.
+
+    l4_inputs:
+      ingredients:
+        - coffee_beans: "Ethiopia Yirgacheffe, medium roast, washed, 1750-2200m"
+        - water: "filtered, TDS 100-150 ppm"
+      equipment:
+        - espresso_machine: "E61 group head or equivalent, PID temperature control"
+        - grinder: "conical burr, stepless adjustment"
+      training:
+        - barista_certification: "SCA Barista Skills Foundation or equivalent"
+    l4_satisfies_l3: >
+      These inputs enable the procedure. Without proper beans (freshness,
+      roast level), water (TDS range), or equipment (pressure control),
+      the procedure cannot achieve the quality gates.
+
+    l5_sourcing:
+      supplier: "Nordic Roasters GmbH, direct trade certified"
+      delivery: "weekly, 5kg minimum"
+      cost_per_kg: 23.00
+    l5_satisfies_l4: >
+      The sourcing ensures inputs are available, fresh, and ethically sourced.
+
+    circular_validation:
+      design_direction: "desired taste (L0) -> quality signals (L1) -> extraction gates (L2) -> manual procedure (L3) -> bean spec (L4) -> Nordic Roasters (L5)"
+      operation_direction: "Nordic Roasters delivers beans (L5) -> beans meet spec (L4) -> barista extracts (L3) -> extraction hits gates (L2) -> customer tastes balanced espresso (L1/L0)"
+      gap_analysis: PASS
+      notes: >
+        Full circular traceability. Every link in the chain is specified.
+        The weakest link is L3 (human execution variance) -- the barista
+        may under/over-extract despite having correct inputs and equipment.
+        This is the L1-L2 gap that quality control procedures address.
+
+  # === IDEOLOGICAL DIMENSION ===
+
+  - id: chain_02
+    dimension: ideological
+    l0_test: "L0_ide_01: Values are enacted, not advertised"
+
+    l1_signals:
+      - signal_id: sig_07
+        description: "Explicit values [quality, transparency, sustainability]"
+      - signal_id: sig_08
+        description: "Croissant discard policy (quality > waste economics)"
+      - signal_id: sig_10
+        description: "Plant milk default pricing inversion"
+    l1_satisfies_l0: >
+      Three visible operational choices demonstrate values without
+      advertising them. The customer encounters enacted values, not
+      claimed values.
+
+    l2_contracts:
+      - source: products/croissant.yaml:storage.display
+        quality_gates:
+          max_display_hours: 8
+          discard_policy: mandatory
+      - source: products/oat_latte.yaml:modifiers
+        quality_gates:
+          default_milk: oat
+          dairy_adjustment: -0.50
+    l2_satisfies_l1: >
+      The discard policy IS the quality commitment. The pricing inversion
+      IS the sustainability position. These are not messaging -- they are
+      operational contracts with measurable parameters.
+
+    l3_procedures:
+      - source: processes/opening_closing.yaml
+        relevant_steps: "croissant display setup, end-of-shift discard procedure"
+      - source: products/oat_latte.yaml:preparation
+        relevant_steps: "default preparation uses oat milk"
+    l3_satisfies_l2: >
+      Opening/closing procedures enforce the discard policy. Default
+      preparation procedure uses oat milk. The values are operationalized
+      in daily procedures, not in marketing materials.
+
+    l4_inputs:
+      - croissants: "daily delivery, fresh from partner bakery"
+      - oat_milk: "Oatly Barista Edition (sustainability-certified)"
+    l4_satisfies_l3: "Inputs are sourced from values-aligned suppliers."
+
+    l5_sourcing:
+      - bakery_partner: "local, daily delivery (freshness enables 8-hour policy)"
+      - oat_milk_supplier: "Oatly (sustainability position aligns with brand values)"
+    l5_satisfies_l4: "Sourcing choices are ideological decisions."
+
+    circular_validation:
+      design_direction: "enacted values (L0) -> visible operational choices (L1) -> discard/pricing contracts (L2) -> daily procedures (L3) -> aligned suppliers (L4) -> values-aligned sourcing (L5)"
+      operation_direction: "Oatly + local bakery deliver (L5) -> fresh croissants + oat milk arrive (L4) -> barista uses oat default, displays croissants (L3) -> discard at 8h, oat is default (L2) -> customer sees quality commitment without being told (L1/L0)"
+      gap_analysis: PASS
+      notes: >
+        Full circular traceability. The ideological signals are authentic
+        because they are PRODUCED BY operations, not ADDED BY marketing.
+        This is the muda argument: brand signals that emerge from process
+        quality are stronger than brand signals from brand campaigns.
+
+  # === SOCIAL DIMENSION ===
+
+  - id: chain_03
+    dimension: social
+    l0_test: "L0_soc_02: Service tone is warm, competent, unhurried"
+
+    l1_signals:
+      - signal_id: sig_17
+        description: "Internal tone principles (direct, specific, blameless, kind, curious)"
+      - signal_id: sig_15
+        description: "Proactive allergen communication"
+    l1_satisfies_l0: >
+      Internal communication culture produces staff behavior that customers
+      perceive as warm, competent, unhurried. The tone principles are
+      INTERNAL signals that LEAK as customer-facing social signals.
+
+    l2_contracts:
+      - source: processes/internal_communications.yaml:tone.principles
+        quality_gates:
+          principles: ["direct", "specific", "blameless", "kind", "curious"]
+      - source: compliance/allergen_management.yaml:customer_communication
+        quality_gates:
+          allergen_protocol: ask_first
+    l2_satisfies_l1: >
+      The tone principles are the CONTRACT for staff interaction quality.
+      But this is where specification hits its limit: "warm, competent,
+      unhurried" is a PERCEPTION (L2), not a procedure (L3). The tone
+      principles can guide but cannot fully determine the social signal.
+
+    l3_procedures:
+      - source: processes/internal_communications.yaml
+        relevant_steps: "tone examples, escalation protocols, no-blame reporting"
+      - note: >
+          The procedure is 581 lines of internal communication protocol.
+          But the PERCEPTION of warmth is not procedurally generatable --
+          it emerges from human executor rendering (L2 execution).
+          This is the strongest example of the HUMAN PREMIUM: no YAML
+          file can specify 'be warm.'
+
+    l4_inputs:
+      - training: "onboarding includes tone principle training"
+      - hiring: "hiring criteria should include communication warmth (not yet specified)"
+
+    l5_sourcing:
+      - labor_market: "Berlin service industry talent pool"
+
+    circular_validation:
+      design_direction: "warm service tone (L0) -> tone culture signals (L1) -> internal comm contract (L2) -> 581-line procedure (L3) -> training (L4) -> hiring (L5)"
+      operation_direction: "hired staff (L5) -> trained on principles (L4) -> follow comm protocols (L3) -> maintain tone (L2) -> customer perceives warmth (L1/L0)"
+      gap_analysis: PARTIAL
+      gap_details:
+        - "L3->L2 gap: procedures cannot fully determine perceived warmth"
+        - "L4 gap: hiring criteria for communication warmth not yet specified"
+        - "L2 execution variance: each barista renders 'warm' differently (human reprocessing)"
+      notes: >
+        This chain demonstrates the LIMIT of specification. The social
+        dimension is the most executor-dependent dimension. Config-org
+        can specify the CONTRACT (tone principles) but cannot specify
+        the PERCEPTION (felt warmth). SBT models the gap: L1 signals
+        (tone principles) are spec-determined, but L2 perception (felt
+        warmth) depends on individual human rendering + observer priors.
+        This is the irreducible human premium.
+
+  # === SEMIOTIC DIMENSION ===
+
+  - id: chain_04
+    dimension: semiotic
+    l0_test: "L0_sem_01: Visual identity reads as 'craft laboratory' not 'corporate chain'"
+
+    l1_signals:
+      - signal_id: sig_01
+        description: "Espresso brown primary color (material-honest)"
+      - signal_id: sig_02
+        description: "Spectral prism logomark (analytical identity)"
+    l1_satisfies_l0: "Color palette + logomark + typography encode craft-analytical identity."
+
+    l2_contracts:
+      - source: brand/identity.yaml:visual
+        quality_gates:
+          primary_color: "#2D1B0E"  # espresso brown
+          display_font: "Space Grotesk"
+          data_font: "JetBrains Mono"
+          logo_min_size_px: 24
+          clear_space: "1x"
+    l2_satisfies_l1: "Visual system is fully specified with exact values."
+
+    l3_procedures:
+      - source: brand/identity.yaml:packaging
+        relevant_steps: "cup branding (mark + wordmark + accent stripe), bag design"
+      - source: brand/identity.yaml:signage
+        relevant_steps: "digital menu board, illuminated exterior, chalkboard A-frame"
+    l3_satisfies_l2: "Every application of the visual system is specified."
+
+    l4_inputs:
+      - cups: "double-wall paper, branded"
+      - bags: "kraft paper, 250g, branded"
+      - signage: "digital display, illuminated box sign, chalkboard"
+
+    l5_sourcing:
+      - packaging_supplier: "not yet specified"
+      - signage_supplier: "not yet specified"
+
+    circular_validation:
+      design_direction: "craft-laboratory perception (L0) -> espresso brown + prism (L1) -> color/font specs (L2) -> packaging/signage applications (L3) -> branded materials (L4) -> suppliers (L5)"
+      operation_direction: "suppliers produce materials (L5) -> branded cups/bags/signs (L4) -> applied per spec (L3) -> visual system consistent (L2) -> customer perceives craft laboratory (L1/L0)"
+      gap_analysis: PASS
+      notes: >
+        Full circular traceability. The semiotic dimension is the most
+        FULLY SPECIFIABLE dimension: visual parameters are exact values
+        (hex colors, font names, pixel sizes). Zero executor variance.
+        This is why semiotic signals are the first thing brands specify --
+        they are the easiest to control. But SBT shows this is only 1 of 8
+        dimensions. A brand that specifies ONLY semiotic is leaving 7
+        dimensions to ambient chance.
+
+# --- Summary ---
+
+validation_summary:
+  chains_analyzed: 4
+  chains_passing: 3
+  chains_partial: 1
+  gaps_identified:
+    - "Social dimension: human warmth cannot be fully specified (irreducible L2 variance)"
+    - "Economic dimension: COGS transparency is specified but not customer-facing (untapped signal)"
+    - "L5 sourcing: packaging and signage suppliers not yet specified"
+    - "Hiring criteria: communication warmth not yet in input specifications"
+
+  convergence_proof: >
+    The traceability chains demonstrate that SBT and config-org are
+    CIRCULAR, not linear. Starting from desired perception (SBT) and
+    tracing through operational specifications (config-org) produces
+    the signals that create the perception. The specification is DESIGNED
+    from perception; the perception EMERGES from specification.
+
+    The partial gap in the social dimension chain is not a failure of
+    the methodology -- it is a DISCOVERY. The methodology reveals exactly
+    where specification ends and human premium begins. This is the
+    boundary between what can be engineered (config-org) and what must
+    be perceived (SBT). The boundary IS the convergence point.
+
+  design_implications:
+    - "Experiential dimension: fully specifiable, fully traceable -- the core of config-org's value"
+    - "Semiotic dimension: fully specifiable, zero executor variance -- the easiest dimension to control"
+    - "Ideological dimension: specifiable through operational choices, not through messaging -- strongest convergence proof"
+    - "Social dimension: partially specifiable (contracts), partially emergent (execution) -- where human premium lives"
+    - "Temporal dimension: specifiable through scheduling, but depth requires time (heritage) -- specification-resistant"
+    - "The D/A ratio is MECHANICALLY determined by specification coverage -- not a diagnostic metric but a DESIGN PARAMETER"

@@ -1,0 +1,181 @@
+version: 1.0.0
+id: oat_latte
+name: Oat Latte
+category: hot_beverage
+available: true
+
+description: >
+  House espresso with Oatly Barista Edition oat milk, steamed to
+  silky microfoam. Finished with optional Monin vanilla syrup.
+  Our most popular plant-based drink.
+
+preparation:
+  method: espresso_and_steamed_milk
+  equipment:
+    - espresso_machine
+    - steam_wand
+  steps:
+    - action: pull_espresso
+      reference: products/espresso.yaml
+      dose_g: 18.0
+      yield_ml: 36
+    - action: steam_oat_milk
+      starting_volume_ml: 240
+      target_temperature_c: 65
+      tolerance_c: 2
+      technique: microfoam
+      foam_depth_mm: 8-12
+    - action: add_syrup
+      optional: true
+      default: true
+      id: vanilla_syrup
+      volume_ml: 10
+    - action: combine
+      sequence:
+        - pour_espresso_into_cup
+        - pour_steamed_milk
+        - latte_art_optional
+    - action: serve
+      vessel: paper_cup
+      vessel_size: medium
+      vessel_volume_ml: 360
+
+ingredients:
+  - id: espresso
+    reference: products/espresso.yaml
+    quantity_per_serving_ml: 36
+    cost_per_serving: 0.42
+
+  - id: oat_milk
+    name: Oatly Barista Edition
+    type: oat_milk
+    supplier:
+      name: Oatly AB
+      country: Sweden
+    quantity_per_serving_ml: 240
+    cost_per_liter: 4.00
+    cost_per_serving: 0.96
+    nutrition_per_100ml:
+      energy_kcal: 59
+      fat_g: 2.8
+      saturated_fat_g: 0.3
+      carbohydrates_g: 6.7
+      sugars_g: 4.1
+      fiber_g: 0.8
+      protein_g: 0.6
+      salt_g: 0.10
+
+  - id: vanilla_syrup
+    name: Monin Vanilla Syrup
+    type: flavoring_syrup
+    supplier:
+      name: Monin SAS
+      country: France
+    quantity_per_serving_ml: 10
+    cost_per_liter: 8.00
+    cost_per_serving: 0.08
+    nutrition_per_100ml:
+      energy_kcal: 340
+      fat_g: 0.0
+      saturated_fat_g: 0.0
+      carbohydrates_g: 85.0
+      sugars_g: 85.0
+      fiber_g: 0.0
+      protein_g: 0.0
+      salt_g: 0.0
+
+nutrition:
+  # Computed per serving:
+  # Espresso 36ml: 2 kcal, 0g fat, 0.3g carbs, 0.3g protein, 63mg caffeine
+  # Oat milk 240ml (x2.4 from per-100ml): 141.6 kcal, 6.72g fat, 0.72g sat fat,
+  #   16.08g carbs, 9.84g sugars, 1.92g fiber, 1.44g protein, 0.24g salt
+  # Vanilla syrup 10ml (x0.1 from per-100ml): 34 kcal, 8.5g carbs, 8.5g sugars
+  # Totals (rounded to 1 decimal):
+  serving_size_ml: 286  # 36 + 240 + 10
+  energy_kcal: 178
+  fat_g: 6.7
+  saturated_fat_g: 0.7
+  carbohydrates_g: 24.9
+  sugars_g: 18.3
+  fiber_g: 1.9
+  protein_g: 1.7
+  salt_g: 0.24
+  caffeine_mg: 63
+
+allergens:
+  declared:
+    - allergen: oats
+      source: oat_milk
+      contains_gluten: false  # Oatly Barista is gluten-free certified
+  cross_contamination:
+    - allergen: milk
+      source: shared_steam_wand
+      risk: moderate
+      mitigation: purge_and_wipe_wand_between_dairy_and_plant_milk
+    - allergen: tree_nuts
+      source: shared_equipment
+      risk: negligible
+      mitigation: dedicated_grinder_for_unflavored
+
+cost:
+  ingredients:
+    espresso: 0.42
+    oat_milk: 0.96
+    vanilla_syrup: 0.08
+  consumables:
+    cup: 0.15
+  total_cogs: 1.61
+  currency: USD
+
+pricing:
+  price: 5.50
+  currency: USD
+  margin_pct: 70.7
+
+modifiers:
+  - id: add_shot
+    description: Add extra espresso shot (18g/36ml)
+    price_adjustment: 1.50
+    nutrition_adjustment:
+      energy_kcal: 2
+      caffeine_mg: 63
+    cogs_adjustment: 0.42
+
+  - id: regular_milk
+    description: Swap oat milk for whole cow's milk
+    price_adjustment: -0.50
+    ingredient_swap:
+      remove: oat_milk
+      add: whole_milk
+      reference: products/cappuccino.yaml#ingredients.whole_milk
+    nutrition_override:
+      # Recalculated: espresso 36ml + whole milk 240ml (x2.4) + vanilla 10ml (x0.1)
+      # Energy: 2 + (64*2.4) + (340*0.1) = 2 + 153.6 + 34 = 189.6 -> 190
+      # Fat: 0 + (3.3*2.4) + 0 = 7.92 -> 7.9
+      # Sat fat: 0 + (2.1*2.4) + 0 = 5.04 -> 5.0
+      # Carbs: 0.3 + (4.7*2.4) + (85*0.1) = 0.3 + 11.28 + 8.5 = 20.08 -> 20.1
+      # Sugars: 0 + (4.7*2.4) + (85*0.1) = 11.28 + 8.5 = 19.78 -> 19.8
+      # Protein: 0.3 + (3.3*2.4) + 0 = 0.3 + 7.92 = 8.22 -> 8.2
+      # Salt: 0 + (0.05*2.4) + 0 = 0.12
+      energy_kcal: 190
+      fat_g: 7.9
+      saturated_fat_g: 5.0
+      carbohydrates_g: 20.1
+      sugars_g: 19.8
+      fiber_g: 0.0
+      protein_g: 8.2
+      salt_g: 0.12
+      caffeine_mg: 63
+    allergen_change:
+      removes: [oats]
+      adds: [milk]
+
+  - id: no_syrup
+    description: Remove vanilla syrup
+    price_adjustment: 0.00
+    ingredient_remove: vanilla_syrup
+    nutrition_adjustment:
+      energy_kcal: -34
+      carbohydrates_g: -8.5
+      sugars_g: -8.5
+    cogs_adjustment: -0.08
