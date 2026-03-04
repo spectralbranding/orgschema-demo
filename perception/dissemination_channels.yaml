@@ -1,0 +1,202 @@
+version: 1.0.0
+
+description: >
+  Signal Dissemination Layer for Spectra Coffee. Specifies how brand atoms
+  reach new observers' signal fields and produce encounter events.
+  Extends the SBT perception layer (spectral_profile.yaml, cohort_analysis.yaml)
+  with pre-encounter mechanics.
+
+  This file answers: "How does someone who has never heard of Spectra Coffee
+  first encounter the brand?" -- the gap between emission and perception.
+
+framework_reference: "Zharnikov 2026a, SBT §3.5 Signal Dissemination Layer"
+
+brand:
+  name: Spectra Coffee
+  category: specialty_coffee_shop
+  market: Berlin, Germany
+  scale: single_location
+
+# --- Channel Inventory ---
+# Each channel has: bandwidth, reach, fidelity, selectivity
+# These populate signal fields in the observer's environment
+
+channels:
+
+  physical_signage:
+    type: designed
+    description: "A-frame chalkboard on sidewalk, window display, entrance signage"
+    bandwidth: low  # few atoms (visual identity, daily offering)
+    reach: local  # pedestrians within 50m radius
+    fidelity: high  # direct visual, unmediated
+    selectivity: geographic  # reaches anyone walking past, not cohort-specific
+    dimensions_transmitted: [semiotic, experiential, cultural]
+    cost: low
+    first_atom_likely: "Chalkboard daily rotation — semiotic + cultural signal"
+
+  google_maps:
+    type: designed
+    description: "Google Business Profile: photos, reviews, hours, location"
+    bandwidth: medium  # photos, reviews, basic info
+    reach: regional  # anyone searching 'coffee near me' in Berlin
+    fidelity: medium  # mediated by photos and review aggregation
+    selectivity: intent  # reaches observers with active category need
+    dimensions_transmitted: [experiential, economic, social]
+    cost: low
+    first_atom_likely: "Star rating + photo of interior — economic + experiential signal"
+
+  instagram:
+    type: designed
+    description: "Brand account: product photos, behind-scenes, daily specials"
+    bandwidth: high  # rich visual content, stories, reels
+    reach: algorithmically_bounded  # depends on followers, hashtags, geo-tags
+    fidelity: medium  # high semiotic fidelity, low experiential (no taste/smell)
+    selectivity: interest  # reaches coffee/food/Berlin lifestyle cohorts
+    dimensions_transmitted: [semiotic, cultural, social, narrative]
+    cost: medium
+    first_atom_likely: "Latte art photo — semiotic + social signal"
+
+  word_of_mouth:
+    type: ambient
+    description: "Existing customers recommending to friends, colleagues, neighbors"
+    bandwidth: low  # one conversation = few atoms, but dimension-rich
+    reach: local_network  # friend-of-friend radius, trust-weighted
+    fidelity: variable  # high for experiential dimension, low for economic detail
+    selectivity: trust_filtered  # reaches people who trust the recommender
+    dimensions_transmitted: [experiential, social, ideological]
+    cost: zero
+    signal_amplification: true  # this IS signal amplification from Confirmed observers
+    first_atom_likely: "Friend says 'you should try Spectra' — social + experiential signal"
+
+  food_blogs:
+    type: ambient
+    description: "Local food bloggers, specialty coffee reviewers"
+    bandwidth: high  # detailed write-ups with photos, context
+    reach: niche  # coffee enthusiast audience, Berlin food scene
+    fidelity: high  # multi-dimensional coverage by knowledgeable observer
+    selectivity: interest  # reaches specialty coffee seekers
+    dimensions_transmitted: [experiential, narrative, cultural, economic, semiotic]
+    cost: zero  # earned media
+    first_atom_likely: "Detailed extraction review — experiential + narrative signal"
+
+  delivery_apps:
+    type: designed
+    description: "Wolt, Lieferando, Uber Eats listing"
+    bandwidth: low  # menu, prices, photos, rating
+    reach: app_bounded  # anyone using the app in delivery radius
+    fidelity: low  # stripped to economic + basic experiential
+    selectivity: convenience  # reaches observers optimizing for speed/location
+    dimensions_transmitted: [economic, experiential]
+    cost: high  # commission-based
+    first_atom_likely: "Menu item + price — economic signal dominates"
+
+# --- Cohort Addressability ---
+# Which channels reach which observer cohorts?
+# Cross-references cohort_analysis.yaml observer types
+
+cohort_addressability:
+
+  morning_regular:
+    primary_channels: [physical_signage, word_of_mouth]
+    secondary_channels: [google_maps]
+    acquisition_pattern: >
+      Lives or works within walking distance. Discovers via A-frame or
+      colleague recommendation. First atom is typically semiotic (signage)
+      or social (recommendation). High receptivity due to daily category need.
+    gate_friction: low  # daily exposure, distinctive signage
+    first_atom_dimension: semiotic  # sees the chalkboard walking to work
+
+  weekend_explorer:
+    primary_channels: [google_maps, instagram, food_blogs]
+    secondary_channels: [physical_signage]
+    acquisition_pattern: >
+      Actively seeking new coffee experiences. Discovers via Google Maps
+      search or Instagram discovery. First atom is typically experiential
+      (review/photo) or cultural (Berlin coffee scene content). High
+      receptivity — active category need + exploration curiosity.
+    gate_friction: low  # actively searching, high curiosity threshold
+    first_atom_dimension: experiential  # finds via search or review
+
+  delivery_app_user:
+    primary_channels: [delivery_apps]
+    secondary_channels: [google_maps]
+    acquisition_pattern: >
+      Encounters brand through delivery platform listing. First atom is
+      economic (price) or experiential (menu photo). Low-fidelity channel
+      strips most dimensional content. Minimal brand recognition — the
+      identity gate may remain Partial (recognizes on app, not in person).
+    gate_friction: high  # commoditized context, many competitors
+    first_atom_dimension: economic  # sees price first
+
+  food_inspector:
+    primary_channels: []  # not acquired through channels — assigned by regulatory body
+    secondary_channels: [google_maps]  # may check online before visit
+    acquisition_pattern: >
+      Not a traditional acquisition target. Encounters brand through
+      regulatory assignment. First atom is compliance-focused (hygiene
+      certificate display, HACCP documentation). Identity gate is
+      irrelevant — inspection is role-based, not perception-based.
+    gate_friction: null  # not applicable
+    first_atom_dimension: null  # not a perception-driven encounter
+
+# --- Acquisition Funnel Targets ---
+# Target transition rates for Spectra Coffee (single Berlin location)
+
+acquisition_targets:
+  monthly_targets:
+    absent_to_present: 5000  # signal field reach (foot traffic + digital)
+    present_to_encountered: 1500  # 30% encounter rate
+    encountered_to_forming: 450  # 30% gate pass rate
+    forming_to_partial: 180  # 40% form meaningful impression
+    partial_to_confirmed: 90  # 50% convert to regular
+    confirmed_to_amplifier: 27  # 30% become recommenders
+
+  notes: >
+    These are illustrative targets derived from the specification,
+    not empirical measurements. A real implementation would track
+    these rates and optimize channel allocation accordingly.
+    The amplification loop (27 recommenders generating word-of-mouth)
+    feeds back into the absent_to_present stage for new observers.
+
+# --- First-Atom Design ---
+# For each cohort, which atom SHOULD be encountered first?
+
+first_atom_design:
+  principle: >
+    The first atom creates the initial prior schema. Spectra Coffee's
+    dominant dimension is experiential (score 9). For cohorts where
+    experiential encounter is possible (morning regular, weekend explorer),
+    engineer the first atom to be experiential. For mediated-only cohorts
+    (delivery app), the first atom is inevitably economic — invest in
+    making the economic signal distinctive (transparent pricing, COGS
+    visibility) rather than fighting the channel's dimensional bias.
+
+  cohort_strategies:
+    morning_regular:
+      ideal_first_atom: "Chalkboard with today's single-origin + extraction note"
+      dimension: semiotic  # what they'll see first (walking past)
+      fallback: experiential  # if they smell the coffee before seeing signage
+      rationale: >
+        Semiotic first atom is optimal because it encodes craft identity
+        (monospace font, specific origin) and invites experiential follow-up.
+        The chalkboard IS the identity gate — it signals 'specialty coffee'
+        and distinguishes from generic cafes.
+
+    weekend_explorer:
+      ideal_first_atom: "Google Maps photo showing extraction parameters on menu board"
+      dimension: experiential
+      fallback: cultural  # Berlin third-wave context in review
+      rationale: >
+        This cohort has active category need + high curiosity. An experiential
+        first atom (precision parameters visible in photo) creates a prior
+        of 'measurement culture' that filters all subsequent encounters.
+
+    delivery_app_user:
+      ideal_first_atom: "Menu listing with origin name + transparent pricing note"
+      dimension: economic
+      fallback: semiotic  # distinctive brand mark in app listing
+      rationale: >
+        Channel forces economic first atom. Differentiate by making economic
+        signal informative (origin name, quality marker) rather than just
+        a price point. This creates a 'premium-justified' prior rather
+        than a 'just another coffee' prior.
