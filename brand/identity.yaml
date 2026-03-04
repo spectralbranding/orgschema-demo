@@ -47,7 +47,7 @@ visual:
         description: Logomark only (spectral prism icon)
         min_width_px: 24
       - id: wordmark
-        description: "Spectra Coffee" text only
+        description: '"Spectra Coffee" text only'
         min_width_px: 80
     min_size_px: 24
     clear_space: 1x  # 1x the height of the mark on all sides

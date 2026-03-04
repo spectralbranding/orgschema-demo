@@ -177,7 +177,7 @@ closing:
       action: last_order_announcement
       time_min: -15  # 15min before closing time
       details:
-        - announce: "Last orders" to remaining customers
+        - announce: '"Last orders" to remaining customers'
         - pos: no new orders accepted after closing time
       reference: processes/internal_communications.yaml:tone.principles
 
