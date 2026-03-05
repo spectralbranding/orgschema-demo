@@ -31,7 +31,7 @@ scenario:
 
 # --- Config-Org Analysis (TDD View) ---
 
-config_org_analysis:
+orgschema_analysis:
 
   contracts_unchanged:
     description: "Process contracts (tests) do NOT change. Same quality gates."
@@ -232,11 +232,11 @@ convergence_insight:
     decision (swap human for machine) is simultaneously a brand decision
     (changes spectral profile), an operational decision (changes procedures),
     and a perception decision (changes customer experience). There is no
-    way to evaluate this decision from only the config-org view (all tests
+    way to evaluate this decision from only the orgschema view (all tests
     still pass) or only the SBT view (perception changes). You need BOTH
     views to understand the full impact.
 
-  config_org_alone: >
+  orgschema_alone: >
     Config-org says: "All quality gate tests still pass. The automated
     system meets every process contract. The executor swap is valid."
     This is TRUE but INCOMPLETE.
@@ -254,7 +254,7 @@ convergence_insight:
     the acceptance tests. In TDD terms: your code compiles and unit tests
     pass, but the acceptance tests fail. Ship or don't ship?"
 
-    This is the power of the circular architecture: config-org provides
+    This is the power of the circular architecture: orgschema provides
     the cascade structure and testable contracts; SBT provides the
     perception model that grounds the acceptance tests. Neither alone
     captures the full picture.

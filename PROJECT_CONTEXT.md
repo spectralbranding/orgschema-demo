@@ -8,12 +8,12 @@
 
 ## What This Project Is
 
-Spectra Coffee is a reference implementation of the Configuration-First Organization methodology. An entire coffee shop -- products, brand identity, compliance, pricing, nutrition, allergens, processes -- specified as machine-readable, version-controlled YAML with no ambiguity and no prose-only documentation.
+Spectra Coffee is a reference implementation of the Organizational Schema Theory methodology. An entire coffee shop -- products, brand identity, compliance, pricing, nutrition, allergens, processes -- specified as machine-readable, version-controlled YAML with no ambiguity and no prose-only documentation.
 
 ## Repository Structure
 
 ```
-config-org-demo/
+orgschema-demo/
 ├── organization.yaml           Identity layer
 ├── brand/identity.yaml         Visual identity, packaging, environment
 ├── products/                   6 items (espresso, oat_latte, cappuccino, croissant, filter_coffee, americano)
@@ -36,6 +36,6 @@ config-org-demo/
 
 ## Related
 
-- Development workspace: `viberesearch/config-org` (private)
-- Framework repo: `spectralbranding/config-org-framework` (public)
+- Development workspace: `viberesearch/orgschema` (private)
+- Framework repo: `spectralbranding/orgschema-framework` (public)
 - SBT framework: `spectralbranding/sbt-framework` (public)

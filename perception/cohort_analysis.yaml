@@ -190,7 +190,7 @@ comparison:
     conclusion: >
       The same operational specification (17 YAML files) produces FOUR
       fundamentally different brand perceptions depending on observer type.
-      This is SBT's core claim demonstrated through config-org: brand is
+      This is SBT's core claim demonstrated through orgschema: brand is
       not a property of the business -- it is a property of the observer's
       perception of the business. Config-org specifies the EMISSION side.
       SBT models the PERCEPTION side. Neither alone tells the full story.

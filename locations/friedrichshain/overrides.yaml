@@ -6,7 +6,7 @@ description: >
   Second location fork demonstrating TDD cascade portability.
   The test suite (L0 Customer Experience Contract, L1 Signal Requirements,
   L2 Process Contracts) is IDENTICAL to the flagship location. Only
-  L3-L5 (procedures, inputs, sourcing) differ. This proves that config-org
+  L3-L5 (procedures, inputs, sourcing) differ. This proves that orgschema
   specs are forkable: copy the tests, rewrite the implementation.
 
 # What stays identical (L0-L2):

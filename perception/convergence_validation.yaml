@@ -3,9 +3,9 @@ version: 1.0.0
 description: >
   Convergence validation: traces every L0 customer experience goal through
   the full TDD cascade (L0 -> L1 -> L2 -> L3 -> L4 -> L5) and verifies
-  circular satisfaction. This file IS the proof that SBT and config-org
+  circular satisfaction. This file IS the proof that SBT and orgschema
   are two views of the same system: the desired perception (SBT) determines
-  the operational specification (config-org), and the specification produces
+  the operational specification (orgschema), and the specification produces
   the signals that create the perception.
 
 framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
@@ -274,20 +274,20 @@ validation_summary:
     - "Hiring criteria: communication warmth not yet in input specifications"
 
   convergence_proof: >
-    The traceability chains demonstrate that SBT and config-org are
+    The traceability chains demonstrate that SBT and orgschema are
     CIRCULAR, not linear. Starting from desired perception (SBT) and
-    tracing through operational specifications (config-org) produces
+    tracing through operational specifications (orgschema) produces
     the signals that create the perception. The specification is DESIGNED
     from perception; the perception EMERGES from specification.
 
     The partial gap in the social dimension chain is not a failure of
     the methodology -- it is a DISCOVERY. The methodology reveals exactly
     where specification ends and human premium begins. This is the
-    boundary between what can be engineered (config-org) and what must
+    boundary between what can be engineered (orgschema) and what must
     be perceived (SBT). The boundary IS the convergence point.
 
   design_implications:
-    - "Experiential dimension: fully specifiable, fully traceable -- the core of config-org's value"
+    - "Experiential dimension: fully specifiable, fully traceable -- the core of orgschema's value"
     - "Semiotic dimension: fully specifiable, zero executor variance -- the easiest dimension to control"
     - "Ideological dimension: specifiable through operational choices, not through messaging -- strongest convergence proof"
     - "Social dimension: partially specifiable (contracts), partially emergent (execution) -- where human premium lives"

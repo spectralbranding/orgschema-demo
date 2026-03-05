@@ -293,4 +293,4 @@ validation:
   secondary: "Mystery shopping (quarterly, 2 assessors per visit)"
   tertiary: "Online review sentiment analysis (continuous)"
   sbt_analysis: "Cross-model spectral profile analysis (semi-annual)"
-  config_org: "CI/CD pipeline traces every process change back to this contract"
+  orgschema: "CI/CD pipeline traces every process change back to this contract"

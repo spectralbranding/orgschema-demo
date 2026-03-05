@@ -2,13 +2,13 @@
 
 A complete coffee shop business specified entirely as configuration.
 
-Spectra Coffee is a reference implementation of the [Configuration-First Organization](https://github.com/spectralbranding/config-org-framework) framework. It demonstrates that an entire business — products, brand identity, compliance, pricing, nutrition, allergens — can be described as machine-readable, version-controlled YAML specifications with no ambiguity and no prose-only documentation.
+Spectra Coffee is a reference implementation of the [Organizational Schema Theory](https://github.com/spectralbranding/orgschema-framework) framework. It demonstrates that an entire business — products, brand identity, compliance, pricing, nutrition, allergens — can be described as machine-readable, version-controlled YAML specifications with no ambiguity and no prose-only documentation.
 
 Every measurement is in SI units. Every margin is computed from itemized costs. Every allergen is traced to its source ingredient and cross-contamination pathway. Every regulatory classification is derived from raw values against jurisdiction-specific thresholds. The entire business is a diff.
 
 ## Why a coffee shop
 
-A coffee shop is the right scale for a configuration-first demo:
+A coffee shop is the right scale for a schema-configured demo:
 
 - **Simple enough to be schematic.** 6 products, 3 roles, 1 location. The full spec fits in a single repository without becoming overwhelming.
 - **Tangible and relatable.** Everyone understands espresso, milk, and croissants. No domain expertise required to evaluate the specs.
@@ -20,7 +20,7 @@ A coffee shop is the right scale for a configuration-first demo:
 ## Repository structure
 
 ```
-config-org-demo/
+orgschema-demo/
   organization.yaml           # Identity layer: name, mission, values, location, roles
   brand/
     identity.yaml              # Visual identity, packaging, environment (lighting, music, temperature)
@@ -115,7 +115,7 @@ This demo specifies the codifiable surface of a business, not the entire busines
 
 ## Related projects
 
-- [spectralbranding/config-org-framework](https://github.com/spectralbranding/config-org-framework) -- Framework and methodology for configuration-first organizations
+- [spectralbranding/orgschema-framework](https://github.com/spectralbranding/orgschema-framework) -- Framework and methodology for schema-configured organizations
 - [spectralbranding/sbt-framework](https://github.com/spectralbranding/sbt-framework) -- Spectral Brand Theory: the theoretical framework
 - [spectralbranding/sbt-papers](https://github.com/spectralbranding/sbt-papers) -- Academic papers on SBT
 

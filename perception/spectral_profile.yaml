@@ -6,12 +6,12 @@ description: >
   and scores it across 8 spectral dimensions.
 
   This is the PREDICTED profile derived from the operational specification
-  (config-org demo files). In a real business, this would be validated
+  (orgschema demo files). In a real business, this would be validated
   against actual customer perception data.
 
 framework_reference: "Zharnikov 2026a, Spectral Brand Theory"
 methodology: >
-  Profile derived from specification analysis (config-org demo, 17 YAML files)
+  Profile derived from specification analysis (orgschema demo, 17 YAML files)
   rather than from observer research. This is the EMISSION-SIDE profile --
   what the specification architecture is designed to produce. The PERCEPTION-SIDE
   profile would come from customer research (SBT observer analysis).

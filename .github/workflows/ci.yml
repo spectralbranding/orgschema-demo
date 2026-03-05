@@ -87,7 +87,7 @@ jobs:
       - name: Checkout framework (validator)
         uses: actions/checkout@v4
         with:
-          repository: spectralbranding/config-org-framework
+          repository: spectralbranding/orgschema-framework
           path: _framework
 
       - name: Install uv
@@ -103,7 +103,7 @@ jobs:
       - name: Level 1 - Schema validation
         run: |
           cd _framework
-          uv run python -m config_org_framework.validate $GITHUB_WORKSPACE
+          uv run python -m orgschema_framework.validate $GITHUB_WORKSPACE
 
       - name: Level 2 - Cross-reference integrity
         run: echo "Checked in Level 1 combined run"
