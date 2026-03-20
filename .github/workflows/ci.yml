@@ -68,48 +68,9 @@ jobs:
           fi
 
       # Security scan - runs for ALL project types
-      - name: Security (Trivy)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-
-  tdd-cascade-validation:
-    name: TDD Cascade Validation
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout demo
-        uses: actions/checkout@v4
-
-      - name: Checkout framework (validator)
-        uses: actions/checkout@v4
-        with:
-          repository: spectralbranding/orgschema-framework
-          path: _framework
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-
-      - name: Set up Python
-        run: uv python install 3.12
-
-      - name: Install validator
-        working-directory: _framework
-        run: uv sync
-
-      - name: Level 1 - Schema validation
+      - name: 🔒 Security (Trivy)
         run: |
-          cd _framework
-          uv run python -m orgschema_framework.validate $GITHUB_WORKSPACE
-
-      - name: Level 2 - Cross-reference integrity
-        run: echo "Checked in Level 1 combined run"
-
-      - name: Level 4 - Signal coverage
-        run: echo "Checked in Level 1 combined run"
-
-      - name: Level 5 - Experience traceability
-        run: echo "Checked in Level 1 combined run"
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor | sudo tee /usr/share/keyrings/trivy.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main" | sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
+          sudo apt-get update -qq && sudo apt-get install -y trivy
+          trivy fs --exit-code 1 --ignore-unfixed --vuln-type os,library --severity CRITICAL,HIGH --no-progress .

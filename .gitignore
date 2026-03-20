@@ -1,11 +1,9 @@
 # Claude Code local settings
-.claude/
 
 # Claude decision traces
 .claude-decisions/
 
 # Skills (fleet-specific)
-skills/
 
 # IDE configs
 .clinerules
@@ -24,3 +22,13 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+
+# Claude Code local settings (keep commands/ tracked)
+.claude/*
+!.claude/commands/
+!.claude/templates/
+!.claude/skills/
+!.claude/hooks/
+
+# Machine-specific MCP config (use .mcp.json.silicon or .mcp.json.intel templates)
+.mcp.json
