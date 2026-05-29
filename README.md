@@ -1,9 +1,10 @@
-# Spectra Coffee
+# Organizational Schema Theory — Demo Organization
 
-[![CI](https://github.com/spectralbranding/orgschema-demo/actions/workflows/ci.yml/badge.svg)](https://github.com/spectralbranding/orgschema-demo/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![MIT License](https://img.shields.io/badge/Code-MIT-blue.svg)](LICENSE)
+[![CC-BY 4.0](https://img.shields.io/badge/Data-CC--BY_4.0-lightgrey.svg)](LICENSE-data)
+![Last Updated](https://img.shields.io/badge/updated-2026--05--29-success)
 
-A complete coffee shop business specified entirely as configuration.
+Working example of OST tier-by-tier specification for a fictional company.
 
 Spectra Coffee is a reference implementation of the [Organizational Schema Theory](https://github.com/spectralbranding/orgschema-framework) framework. It demonstrates that an entire business — products, brand identity, compliance, pricing, nutrition, allergens — can be described as machine-readable, version-controlled YAML specifications with no ambiguity and no prose-only documentation.
 
@@ -122,6 +123,62 @@ This demo specifies the codifiable surface of a business, not the entire busines
 - [spectralbranding/sbt-framework](https://github.com/spectralbranding/sbt-framework) -- Spectral Brand Theory: the theoretical framework
 - [spectralbranding/sbt-papers](https://github.com/spectralbranding/sbt-papers) -- Academic papers on SBT
 
-## License
+---
 
-MIT
+## 1 | Getting Started
+
+This repository is a pure YAML/Markdown specification — no runtime, no package. To explore it:
+
+1. Clone the repo: `git clone https://github.com/spectralbranding/orgschema-demo.git`
+2. Open `organization.yaml` for the identity layer entry point.
+3. Walk subdirectories in the order described in `## 2 | Project Layout` below.
+
+The project anchor is `.here` at the repository root; relative paths from any subdirectory resolve from there.
+
+## 2 | Project Layout
+
+```
+orgschema-demo/
+  organization.yaml           # Identity layer
+  brand/                       # Brand layer (identity.yaml)
+  products/                    # Product specs (6 files)
+  processes/                   # Operational procedures (4 files)
+  compliance/                  # HACCP + allergen management
+  signals/                     # SBT signal-map + observer-profiles
+  layers/                      # Multi-jurisdiction classifications
+  locations/                   # Per-location specifications
+  perception/                  # Cohort perception modeling
+  docs/                        # Supplementary documentation
+  output/{figures,tables,logs}/  # Reserved for any rendered artifacts
+```
+
+A richer narrative walkthrough of each layer is in the "How to read this" section above.
+
+## 3 | Quick Start
+
+```bash
+./reproduce.sh
+```
+
+This is a YAML/Markdown demo; there is no computational pipeline. The orchestrator script exits zero with a pointer to the spec directories. Reading the YAML files in the order described in `## 2 | Project Layout` is the full reproduction path.
+
+## 4 | Citation
+
+If you use this demo, please cite via the `CITATION.cff` file at the repository root. GitHub renders it natively under "Cite this repository" in the sidebar.
+
+Plain-text citation:
+
+> Zharnikov, D. (2026). *Organizational Schema Theory — Demo Organization* (Version 1.0.0). https://github.com/spectralbranding/orgschema-demo
+
+Author ORCID: `0009-0000-6893-9231`.
+
+## 5 | Licence
+
+- **Code** — MIT License (`LICENSE`).
+- **Data, YAML specifications, figures, tables, rendered artifacts** — Creative Commons Attribution 4.0 International (`LICENSE-data`).
+
+Both files are present at the repository root.
+
+---
+
+*Last updated: 2026-05-29*

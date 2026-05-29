@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Organizational Schema Theory — Demo Organization"
+version: "1.0.0"
+authors:
+  - family-names: "Zharnikov"
+    given-names: "Dmitry"
+    orcid: "0009-0000-6893-9231"
+date-released: "2026-05-29"
+license: "MIT"
+license-url: "https://opensource.org/licenses/MIT"
+repository-code: "https://github.com/spectralbranding/orgschema-demo"
+abstract: >
+  Working example of Organizational Schema Theory tier-by-tier specification
+  for a fictional company (Spectra Coffee). Demonstrates that an entire
+  business — products, brand identity, compliance, pricing, nutrition,
+  allergens, signals — can be described as machine-readable, version-controlled
+  YAML with no ambiguity and no prose-only documentation.
+keywords:
+  - "organizational schema theory"
+  - "spectral brand theory"
+  - "infrastructure as code"
+  - "business specification"
+  - "machine-readable organization"
