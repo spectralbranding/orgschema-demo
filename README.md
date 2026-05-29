@@ -162,7 +162,7 @@ A richer narrative walkthrough of each layer is in the "How to read this" sectio
 
 This is a YAML/Markdown demo; there is no computational pipeline. The orchestrator script exits zero with a pointer to the spec directories. Reading the YAML files in the order described in `## 2 | Project Layout` is the full reproduction path.
 
-## 4 | Citation
+## 6 | Citation
 
 If you use this demo, please cite via the `CITATION.cff` file at the repository root. GitHub renders it natively under "Cite this repository" in the sidebar.
 
@@ -172,7 +172,7 @@ Plain-text citation:
 
 Author ORCID: `0009-0000-6893-9231`.
 
-## 5 | Licence
+## 7 | Licence
 
 - **Code** — MIT License (`LICENSE`).
 - **Data, YAML specifications, figures, tables, rendered artifacts** — Creative Commons Attribution 4.0 International (`LICENSE-data`).
