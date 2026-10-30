@@ -51,27 +51,6 @@ mappings:
       the supply chain as a character in the brand narrative, not
       an invisible backstage process.
 
-  # --- Temporal Dimension ---
-  # Time-related signals: heritage, seasonality, rhythm
-
-  - id: sig_05
-    source: brand/identity.yaml:environment.music.schedule
-    dimension: temporal
-    emission_type: designed
-    signal: >
-      Three-phase music schedule (jazz morning, lo-fi afternoon,
-      acoustic evening) creates temporal rhythm. The space itself
-      marks time, training regulars to associate moods with hours.
-
-  - id: sig_06
-    source: brand/identity.yaml:environment.lighting.brightness_schedule
-    dimension: temporal
-    emission_type: ambient
-    signal: >
-      Brightness ramping from 60% at open to 100% midday and back to
-      50% by close creates a circadian signal. Ambient because customers
-      feel it without consciously registering the schedule.
-
   # --- Ideological Dimension ---
   # Values, beliefs, worldview expressed through operations
 
@@ -92,6 +71,50 @@ mappings:
       8-hour display maximum with mandatory discard policy is an
       ideological signal: quality over waste economics. The config
       encodes a value judgment about acceptable freshness.
+
+  # --- Experiential Dimension ---
+  # Sensory encounters, physical environment, service feel
+
+  - id: sig_11
+    source: brand/identity.yaml:environment.temperature
+    dimension: experiential
+    emission_type: ambient
+    signal: >
+      21C target with 1C tolerance and contextual override (20C when
+      outside >30C) is invisible infrastructure. Customers never see
+      the config but feel the result as comfort. Pure ambient emission.
+
+  - id: sig_12
+    source: products/cappuccino.yaml:preparation.steps[1].foam_depth_mm
+    dimension: experiential
+    emission_type: designed
+    signal: >
+      Foam depth spec of 12-18mm defines the tactile and visual
+      experience. The millimeter precision is a designed signal of
+      craft — even if customers never know the number, they experience
+      the consistency.
+
+  # --- Social Dimension ---
+  # Community, belonging, social identity, shared rituals
+
+  - id: sig_15
+    source: compliance/allergen_management.yaml:customer_communication
+    dimension: social
+    emission_type: designed
+    signal: >
+      Proactive allergen communication (ask-first protocol, visible
+      allergen matrix) signals inclusive hospitality. The social message:
+      everyone belongs here, dietary restrictions are anticipated
+      rather than accommodated as exceptions.
+
+  - id: sig_16
+    source: signals/observer-profiles.yaml:morning_regular
+    dimension: social
+    emission_type: ambient
+    signal: >
+      The existence of a "morning regular" observer profile implies
+      the brand recognizes and values habitual relationships. Regulars
+      are a named category, not an anonymous transaction pattern.
 
   # --- Economic Dimension ---
   # Pricing, value perception, cost transparency
@@ -116,28 +139,6 @@ mappings:
       structure itself is an economic signal about which option is
       "normal" vs. "alternative."
 
-  # --- Experiential Dimension ---
-  # Sensory encounters, physical environment, service feel
-
-  - id: sig_11
-    source: brand/identity.yaml:environment.temperature
-    dimension: experiential
-    emission_type: ambient
-    signal: >
-      21C target with 1C tolerance and contextual override (20C when
-      outside >30C) is invisible infrastructure. Customers never see
-      the config but feel the result as comfort. Pure ambient emission.
-
-  - id: sig_12
-    source: products/cappuccino.yaml:preparation.steps[1].foam_depth_mm
-    dimension: experiential
-    emission_type: designed
-    signal: >
-      Foam depth spec of 12-18mm defines the tactile and visual
-      experience. The millimeter precision is a designed signal of
-      craft — even if customers never know the number, they experience
-      the consistency.
-
   # --- Cultural Dimension ---
   # Cultural codes, rituals, community belonging
 
@@ -159,27 +160,26 @@ mappings:
       The handwritten format is a deliberate cultural code: artisanal,
       local, anti-corporate.
 
-  # --- Social Dimension ---
-  # Community, belonging, social identity, shared rituals
+  # --- Temporal Dimension ---
+  # Time-related signals: heritage, seasonality, rhythm
 
-  - id: sig_15
-    source: compliance/allergen_management.yaml:customer_communication
-    dimension: social
+  - id: sig_05
+    source: brand/identity.yaml:environment.music.schedule
+    dimension: temporal
     emission_type: designed
     signal: >
-      Proactive allergen communication (ask-first protocol, visible
-      allergen matrix) signals inclusive hospitality. The social message:
-      everyone belongs here, dietary restrictions are anticipated
-      rather than accommodated as exceptions.
+      Three-phase music schedule (jazz morning, lo-fi afternoon,
+      acoustic evening) creates temporal rhythm. The space itself
+      marks time, training regulars to associate moods with hours.
 
-  - id: sig_16
-    source: signals/observer-profiles.yaml:morning_regular
-    dimension: social
+  - id: sig_06
+    source: brand/identity.yaml:environment.lighting.brightness_schedule
+    dimension: temporal
     emission_type: ambient
     signal: >
-      The existence of a "morning regular" observer profile implies
-      the brand recognizes and values habitual relationships. Regulars
-      are a named category, not an anonymous transaction pattern.
+      Brightness ramping from 60% at open to 100% midday and back to
+      50% by close creates a circadian signal. Ambient because customers
+      feel it without consciously registering the schedule.
 
   # --- Internal Communications Signals ---
   # Processes that are invisible to customers but leak through staff behavior

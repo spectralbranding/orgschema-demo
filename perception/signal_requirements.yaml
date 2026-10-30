@@ -65,31 +65,6 @@ signal_requirements:
     signal_map_refs: [sig_14]
     verification: mystery_shopper_discovers_story
 
-  # --- Temporal Signals ---
-
-  - id: L1_tem_01
-    dimension: temporal
-    satisfies_experience: [L0_tem_01]
-    requirement: >
-      Space exhibits perceptible temporal rhythm through music schedule,
-      lighting changes, and energy level shifts across day parts.
-    implemented_by:
-      - brand/identity.yaml  # music schedule, lighting schedule
-    signal_map_refs: [sig_05, sig_06]
-    verification: time_of_day_perception_differs
-
-  - id: L1_tem_02
-    dimension: temporal
-    satisfies_experience: [L0_tem_02, L0_tem_03]
-    requirement: >
-      Product consistency over time builds trust and enables ritual
-      formation. Same drink tastes the same every visit.
-    implemented_by:
-      - processes/quality_control.yaml  # daily calibration, shot standards
-      - products/espresso.yaml  # precise extraction parameters
-    signal_map_refs: [sig_12]
-    verification: repeat_customer_consistency_rating
-
   # --- Ideological Signals ---
 
   - id: L1_ide_01
@@ -118,35 +93,6 @@ signal_requirements:
       - products/espresso.yaml  # extraction parameters
     signal_map_refs: [sig_12, sig_17]
     verification: parameter_precision_audit
-
-  # --- Economic Signals ---
-
-  - id: L1_eco_01
-    dimension: economic
-    satisfies_experience: [L0_eco_01, L0_eco_03]
-    requirement: >
-      Pricing communicates fair value — premium justified by visible
-      quality, not brand markup. No hidden costs or upselling pressure.
-    implemented_by:
-      - products/espresso.yaml  # pricing section
-      - products/cappuccino.yaml
-      - products/oat_latte.yaml
-      - products/filter_coffee.yaml
-      - products/americano.yaml
-      - products/croissant.yaml
-    signal_map_refs: [sig_09]
-    verification: customer_value_perception_survey
-
-  - id: L1_eco_02
-    dimension: economic
-    satisfies_experience: [L0_eco_02]
-    requirement: >
-      Pricing structure signals values: plant milk is default, dairy
-      is the modifier. This inverts industry convention.
-    implemented_by:
-      - products/oat_latte.yaml  # regular_milk modifier is negative price
-    signal_map_refs: [sig_10]
-    verification: menu_shows_plant_default
 
   # --- Experiential Signals ---
 
@@ -186,31 +132,6 @@ signal_requirements:
     signal_map_refs: []
     verification: delivery_time_tracking
 
-  # --- Cultural Signals ---
-
-  - id: L1_cul_01
-    dimension: cultural
-    satisfies_experience: [L0_cul_01]
-    requirement: >
-      Space reads as Berlin specialty coffee — design language, music,
-      and environment match third-wave codes.
-    implemented_by:
-      - brand/identity.yaml  # environment, music, design
-      - organization.yaml  # Berlin location
-    signal_map_refs: [sig_13, sig_14]
-    verification: first_visit_perception_survey
-
-  - id: L1_cul_02
-    dimension: cultural
-    satisfies_experience: [L0_cul_02, L0_cul_03]
-    requirement: >
-      Atmosphere is welcoming to newcomers. Handwritten/human elements
-      prevent sterile-clinical feeling. Menu is accessible.
-    implemented_by:
-      - brand/identity.yaml  # signage, a-frame, chalkboard
-    signal_map_refs: [sig_14, sig_18]
-    verification: newcomer_comfort_rating
-
   # --- Social Signals ---
 
   - id: L1_soc_01
@@ -248,3 +169,82 @@ signal_requirements:
       - processes/internal_communications.yaml  # gemba, relationship building
     signal_map_refs: [sig_16]
     verification: regular_recognition_survey
+
+  # --- Economic Signals ---
+
+  - id: L1_eco_01
+    dimension: economic
+    satisfies_experience: [L0_eco_01, L0_eco_03]
+    requirement: >
+      Pricing communicates fair value — premium justified by visible
+      quality, not brand markup. No hidden costs or upselling pressure.
+    implemented_by:
+      - products/espresso.yaml  # pricing section
+      - products/cappuccino.yaml
+      - products/oat_latte.yaml
+      - products/filter_coffee.yaml
+      - products/americano.yaml
+      - products/croissant.yaml
+    signal_map_refs: [sig_09]
+    verification: customer_value_perception_survey
+
+  - id: L1_eco_02
+    dimension: economic
+    satisfies_experience: [L0_eco_02]
+    requirement: >
+      Pricing structure signals values: plant milk is default, dairy
+      is the modifier. This inverts industry convention.
+    implemented_by:
+      - products/oat_latte.yaml  # regular_milk modifier is negative price
+    signal_map_refs: [sig_10]
+    verification: menu_shows_plant_default
+
+  # --- Cultural Signals ---
+
+  - id: L1_cul_01
+    dimension: cultural
+    satisfies_experience: [L0_cul_01]
+    requirement: >
+      Space reads as Berlin specialty coffee — design language, music,
+      and environment match third-wave codes.
+    implemented_by:
+      - brand/identity.yaml  # environment, music, design
+      - organization.yaml  # Berlin location
+    signal_map_refs: [sig_13, sig_14]
+    verification: first_visit_perception_survey
+
+  - id: L1_cul_02
+    dimension: cultural
+    satisfies_experience: [L0_cul_02, L0_cul_03]
+    requirement: >
+      Atmosphere is welcoming to newcomers. Handwritten/human elements
+      prevent sterile-clinical feeling. Menu is accessible.
+    implemented_by:
+      - brand/identity.yaml  # signage, a-frame, chalkboard
+    signal_map_refs: [sig_14, sig_18]
+    verification: newcomer_comfort_rating
+
+  # --- Temporal Signals ---
+
+  - id: L1_tem_01
+    dimension: temporal
+    satisfies_experience: [L0_tem_01]
+    requirement: >
+      Space exhibits perceptible temporal rhythm through music schedule,
+      lighting changes, and energy level shifts across day parts.
+    implemented_by:
+      - brand/identity.yaml  # music schedule, lighting schedule
+    signal_map_refs: [sig_05, sig_06]
+    verification: time_of_day_perception_differs
+
+  - id: L1_tem_02
+    dimension: temporal
+    satisfies_experience: [L0_tem_02, L0_tem_03]
+    requirement: >
+      Product consistency over time builds trust and enables ritual
+      formation. Same drink tastes the same every visit.
+    implemented_by:
+      - processes/quality_control.yaml  # daily calibration, shot standards
+      - products/espresso.yaml  # precise extraction parameters
+    signal_map_refs: [sig_12]
+    verification: repeat_customer_consistency_rating
